@@ -2,6 +2,7 @@ import java.util.Scanner;
 
 public class DnD
 {
+
     public static void main(String[] args)
     {
         GameBoard gameBoard = new GameBoard();
