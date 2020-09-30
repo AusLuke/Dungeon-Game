@@ -9,6 +9,7 @@ import javafx.scene.shape.Rectangle;
 public class GameBoard1
 {
     private GridPane gameBoard;
+    private Player1 player = new Player1();
 
     GameBoard1()
     {
@@ -16,26 +17,24 @@ public class GameBoard1
         for(int x = 0; x < 6; x++)
             for(int y = 0; y < 4; y++)
                 gameBoard.add(new Tile1(), x, y, 1, 1);
-        gameBoard.add(new Player1(), 0, 0);
+        gameBoard.add(player, 0, 0);
         gameBoard.setHgap(1);
         gameBoard.setVgap(1);
 
         gameBoard.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->{
-            //System.out.println(e.getX() + " " + e.getY() + " " + e.getButton());
-            Node source = (Node)e.getSource() ;
-            Integer colIndex = gameBoard.getColumnIndex(source);
-            Integer rowIndex = gameBoard.getRowIndex(source);
+            Node source = e.getPickResult().getIntersectedNode();
+            System.out.println(source);
+            Integer colIndex = GridPane.getColumnIndex(source);
+            Integer rowIndex = GridPane.getRowIndex(source);
             System.out.println(colIndex + " " + rowIndex);
+
+            //Swapping if valid
         });
-
-
-        //gameBoard.onMouseClickedProperty()
     }
 
     GridPane getGameBoard()
     {
         return gameBoard;
     }
-
 
 }

@@ -1,10 +1,13 @@
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
 public class Tile1 extends Rectangle
 {
+    int col;
+
     Tile1()
     {
         this.setWidth(100);
@@ -18,5 +21,4 @@ public class Tile1 extends Rectangle
             }
         });
     }
-
 }
