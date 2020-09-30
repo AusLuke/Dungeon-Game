@@ -1,71 +1,58 @@
+import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
+
 public class GameBoard
 {
-    Tile[][] gameBoard = new Tile[8][12];
-    Player player = new Player();
+    private GridPane gameBoard;
+    private Player player = new Player();
 
-    //Can read in text file here to load level
     GameBoard()
     {
-        for(int x = 0; x < 8; x++)
-            for(int y = 0; y < 12; y++)
-                gameBoard[x][y] = new Tile();
-        gameBoard[(int) player.getCoordinates().getKey()][(int) player.getCoordinates().getValue()] = player;
-        gameBoard[2][2] = new Wall();
-        gameBoard[2][3] = new Wall();
-        gameBoard[3][2] = new Wall();
-        gameBoard[4][2] = new Wall();
-        gameBoard[5][2] = new Wall();
-        gameBoard[6][2] = new Wall();
-        gameBoard[7][2] = new Wall();
-        gameBoard[7][4] = new Wall();
-        gameBoard[6][4] = new Wall();
-        gameBoard[5][4] = new Wall();
-        gameBoard[4][4] = new Wall();
-        gameBoard[4][5] = new Wall();
-        gameBoard[7][3] = new Chest();
+        gameBoard = new GridPane();
+        for(int x = 0; x < 6; x++)
+            for(int y = 0; y < 4; y++)
+                gameBoard.add(new Tile(), x, y, 1, 1);
+        gameBoard.add(player, 0, 0);
+        gameBoard.setHgap(1);
+        gameBoard.setVgap(1);
 
+        gameBoard.addEventHandler(MouseEvent.MOUSE_CLICKED, e ->{
+            try
+            {
+                Node source = e.getPickResult().getIntersectedNode();
+                Integer colIndex = GridPane.getColumnIndex(source);
+                Integer rowIndex = GridPane.getRowIndex(source);
 
+                int playerC = (int) player.getCoordinates().getKey();
+                int playerR = (int) player.getCoordinates().getValue();
 
+                if (playerC == colIndex - 1 && playerR == rowIndex)
+                    swap(playerC, playerR, colIndex, rowIndex);
+                else if (playerC == colIndex + 1 && playerR == rowIndex)
+                    swap(playerC, playerR, colIndex, rowIndex);
+                else if (playerR == rowIndex - 1 && playerC == colIndex)
+                    swap(playerC, playerR, colIndex, rowIndex);
+                else if (playerR == rowIndex + 1 && playerC == colIndex)
+                    swap(playerC, playerR, colIndex, rowIndex);
+            }
+            catch(Exception ignored){}
+
+        });
     }
 
-    public void printBoard ()
+    void swap(int playerC, int playerR, int colIndex, int rowIndex)
     {
-        for (Tile[] x : gameBoard)
-        {
-            for (Tile y : x)
-                System.out.print(y.getTile() + " ");
-            System.out.println();
-        }
-        System.out.println();
+        Player temp = player;
+        player.setCoordinates(colIndex, rowIndex);
+        gameBoard.getChildren().remove(temp);
+        gameBoard.add(new Tile(), playerC, playerR, 1, 1);
+        gameBoard.add(temp, colIndex, rowIndex, 1, 1);
     }
 
-    public void doPlayerMove(String direction)
+    GridPane getGameBoard()
     {
-        int x = (int) player.getCoordinates().getKey();
-        int y = (int) player.getCoordinates().getValue();
-        gameBoard[x][y] = new Tile();
-
-        if (direction.equals("w") && !gameBoard[x - 1][y].getTile().equals("W") && x != 0)
-        {
-            player.setCoordinates(x - 1, y);
-            gameBoard[x - 1][y] = player;
-        }
-        else if (direction.equals("a") && !gameBoard[x][y - 1].getTile().equals("W") && y != 0)
-        {
-            player.setCoordinates(x, y - 1);
-            gameBoard[x][y - 1] = player;
-        }
-        else if (direction.equals("s") && !gameBoard[x + 1][y].getTile().equals("W") && x != 7)
-        {
-            player.setCoordinates(x + 1, y);
-            gameBoard[x + 1][y] = player;
-        }
-        else if (direction.equals("d") && !gameBoard[x][y + 1].getTile().equals("W") && (int) y != 11)
-        {
-            player.setCoordinates(x, y + 1);
-            gameBoard[x][y + 1] = player;
-        }
-        else
-            gameBoard[x][y] = player;
+        return gameBoard;
     }
+
 }

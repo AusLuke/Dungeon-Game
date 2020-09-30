@@ -1,3 +1,4 @@
+import javafx.scene.paint.Paint;
 import javafx.util.Pair;
 
 public class Player extends Tile
@@ -6,11 +7,16 @@ public class Player extends Tile
 
     Player()
     {
-    }
-
-    public String getTile()
-    {
-        return "P";
+        this.setWidth(100);
+        this.setHeight(100);
+        this.setFill(Paint.valueOf("#0000FF"));
+        /*this.setOnMouseClicked(new EventHandler<MouseEvent>()
+        {
+            public void handle(MouseEvent event)
+            {
+                setFill(Paint.valueOf("#00FF00"));
+            }
+        });*/
     }
 
     public Pair getCoordinates()
@@ -22,5 +28,4 @@ public class Player extends Tile
     {
         coordinates = new Pair<>(xPos, yPos);
     }
-
 }
