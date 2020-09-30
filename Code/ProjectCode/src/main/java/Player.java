@@ -10,13 +10,6 @@ public class Player extends Tile
         this.setWidth(100);
         this.setHeight(100);
         this.setFill(Paint.valueOf("#0000FF"));
-        /*this.setOnMouseClicked(new EventHandler<MouseEvent>()
-        {
-            public void handle(MouseEvent event)
-            {
-                setFill(Paint.valueOf("#00FF00"));
-            }
-        });*/
     }
 
     public Pair getCoordinates()
