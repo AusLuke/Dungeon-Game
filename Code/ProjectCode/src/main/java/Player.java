@@ -1,5 +1,8 @@
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.util.Pair;
+
+import javafx.scene.image.Image;
 
 public class Player extends Tile
 {
@@ -9,7 +12,10 @@ public class Player extends Tile
     {
         this.setWidth(100);
         this.setHeight(100);
-        this.setFill(Paint.valueOf("#0000FF"));
+        Image image = new Image("dragon.jpg");
+        ImagePattern imagePattern = new ImagePattern(image);
+        this.setFill(imagePattern);
+
     }
 
     public Pair getCoordinates()

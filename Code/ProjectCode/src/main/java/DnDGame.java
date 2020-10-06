@@ -5,8 +5,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class DnDGame extends Application
@@ -36,10 +36,15 @@ public class DnDGame extends Application
     {
         makeMenu();
 
+        Image background = new Image("background.png");
+        BackgroundImage backgroundImage1 = new BackgroundImage(background, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
+        Background gameBG = new Background(backgroundImage1);
+
         //BorderPane sits on top of the Scene
         borderPane = new BorderPane();
         borderPane.setPadding(new Insets(0, 0, 0, 0));
         borderPane.setTop(menuBar);
+        borderPane.setBackground(gameBG);
 
         //Pane sits on top of the BorderPane
         pane = new StackPane();

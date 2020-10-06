@@ -1,7 +1,6 @@
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Paint;
 
 public class GameBoard
 {
@@ -21,6 +20,8 @@ public class GameBoard
         gameBoard.add(new Wall(), 4, 1);
         gameBoard.add(new Wall(), 5, 1);
         gameBoard.add(new Wall(), 3, 3);
+        gameBoard.add(new Door(),5,3);
+        gameBoard.add(new Chest(), 5,0);
         gameBoard.setHgap(1);
         gameBoard.setVgap(1);
 
@@ -52,7 +53,16 @@ public class GameBoard
     {
         if (source.getClass() == Wall.class)
         {
-            ((Wall)source).setFill(Paint.valueOf("#000080"));
+            ((Wall)source).setImage();
+            return;
+        }
+        if (source.getClass() == Door.class)
+        {
+            ((Door)source).setImage();
+            return;
+        }
+        if(source.getClass() == Chest.class){
+            ((Chest) source).setImage();
             return;
         }
 
