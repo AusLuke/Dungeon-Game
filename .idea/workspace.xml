@@ -5,16 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b2edb6c7-d6d8-4f1f-ad95-bc368d98dfcf" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/ProjectCode/DnD.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ProjectCode/DnD.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/ProjectCode/src/main/java/Chest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ProjectCode/src/main/java/Chest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/ProjectCode/src/main/java/DnDGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ProjectCode/src/main/java/DnDGame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Code/ProjectCode/src/main/java/Door.java" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ProjectCode/src/main/java/Door.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/ProjectCode/src/main/java/GameBoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ProjectCode/src/main/java/GameBoard.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/ProjectCode/src/main/java/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ProjectCode/src/main/java/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/ProjectCode/src/main/java/Tile.java" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ProjectCode/src/main/java/Tile.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/ProjectCode/src/main/java/Wall.java" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ProjectCode/src/main/java/Wall.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/ProjectCode/target/classes/Chest.class" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ProjectCode/target/classes/Chest.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/ProjectCode/target/classes/GameBoard.class" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ProjectCode/target/classes/GameBoard.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Code/ProjectCode/target/classes/META-INF/DnD.kotlin_module" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/ProjectCode/target/classes/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ProjectCode/target/classes/Player.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/ProjectCode/target/classes/Tile.class" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ProjectCode/target/classes/Tile.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Code/ProjectCode/target/classes/Wall.class" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ProjectCode/target/classes/Wall.class" afterDir="false" />
@@ -26,6 +27,9 @@
   </component>
   <component name="CodeStyleSettingsInfer">
     <option name="done" value="true" />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="CodeIris Favorites" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -62,7 +66,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../CS 342/CS-342-Word-Guessing-Game-Client" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Documents/CS342/ThreeCardPoker_Project2_Sp2020" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -91,7 +95,7 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -127,30 +131,30 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1601441931480" />
-    <state x="686" y="211" key="FileChooserDialogImpl" timestamp="1601943240413">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1602126045624">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1601171484827" />
+    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1602126045624" />
     <state x="686" y="211" key="FileChooserDialogImpl/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1601943240413" />
-    <state width="1877" height="282" key="GridCell.Tab.0.bottom" timestamp="1601956617815">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state width="1492" height="147" key="GridCell.Tab.0.bottom" timestamp="1602177116455">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1492" height="147" key="GridCell.Tab.0.bottom/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1601444733023" />
+    <state width="1492" height="147" key="GridCell.Tab.0.bottom/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1602177116455" />
     <state width="1877" height="282" key="GridCell.Tab.0.bottom/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1601956617815" />
-    <state width="1877" height="282" key="GridCell.Tab.0.center" timestamp="1601956617815">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state width="1492" height="147" key="GridCell.Tab.0.center" timestamp="1602177116454">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1492" height="147" key="GridCell.Tab.0.center/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1601444733022" />
+    <state width="1492" height="147" key="GridCell.Tab.0.center/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1602177116454" />
     <state width="1877" height="282" key="GridCell.Tab.0.center/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1601956617815" />
-    <state width="1877" height="282" key="GridCell.Tab.0.left" timestamp="1601956617815">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state width="1492" height="147" key="GridCell.Tab.0.left" timestamp="1602177116454">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1492" height="147" key="GridCell.Tab.0.left/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1601444733022" />
+    <state width="1492" height="147" key="GridCell.Tab.0.left/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1602177116454" />
     <state width="1877" height="282" key="GridCell.Tab.0.left/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1601956617815" />
-    <state width="1877" height="282" key="GridCell.Tab.0.right" timestamp="1601956617815">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state width="1492" height="147" key="GridCell.Tab.0.right" timestamp="1602177116454">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1492" height="147" key="GridCell.Tab.0.right/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1601444733023" />
+    <state width="1492" height="147" key="GridCell.Tab.0.right/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1602177116454" />
     <state width="1877" height="282" key="GridCell.Tab.0.right/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1601956617815" />
     <state x="498" y="0" key="SettingsEditor" timestamp="1601145446254">
       <screen x="0" y="0" width="1536" height="824" />

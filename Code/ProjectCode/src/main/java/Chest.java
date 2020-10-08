@@ -4,23 +4,23 @@ import javafx.scene.paint.Paint;
 
 public class Chest extends Tile
 {
+    boolean visited = false;
+    Image image = new Image("chest.jpg");
+    ImagePattern imagePattern = new ImagePattern(image);
+
     Chest()
     {
         this.setWidth(100);
         this.setHeight(100);
         this.setFill(Paint.valueOf("#000000"));
     }
-    public void setImage()
-    {
-        this.setWidth(100);
-        this.setHeight(100);
-        Image image = new Image("chest.jpg");
-        ImagePattern imagePattern = new ImagePattern(image);
-        this.setFill(imagePattern);
-    }
 
-    public String getTile()
+    //If you encounter a new chest, fill it, otherwise return 0 to avoid printing to the chat bar
+    public int setImage()
     {
-        return "C";
+        if (visited) return 0;
+        this.setFill(imagePattern);
+        visited = true;
+        return 3;
     }
 }
