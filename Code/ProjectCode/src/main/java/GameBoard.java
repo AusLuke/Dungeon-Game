@@ -1,9 +1,13 @@
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 public class GameBoard extends GridPane
 {
+    Media levelOneMusic = new Media(getClass().getClassLoader().getResource("track1.mp3").toString());
+    MediaPlayer track1 = new MediaPlayer(levelOneMusic);
     private Player player = new Player();
     private int state;
 
@@ -11,6 +15,9 @@ public class GameBoard extends GridPane
     {
         this.setHgap(1);
         this.setVgap(1);
+        track1.setVolume(0.05);
+        track1.setCycleCount(MediaPlayer.INDEFINITE);
+        track1.play();
 
         //Create map for game board
         for(int x = 0; x < 6; x++)
@@ -63,11 +70,18 @@ public class GameBoard extends GridPane
         }
         else if(source.getClass() == Chest.class){
             state = ((Chest) source).setImage();
+            if (state == 3)
+                player.setKey();
             return;
         }
         else if (source.getClass() == Door.class)
         {
             state = ((Door)source).setImage();
+            if (player.checkKey())
+            {
+                state = 5;
+                player.setKey();
+            }
             return;
         }
 
@@ -103,5 +117,10 @@ public class GameBoard extends GridPane
     void setState()
     {
         state = 0;
+    }
+
+    public String getPlayerInventory()
+    {
+        return player.getInventory();
     }
 }

@@ -2,11 +2,10 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -16,6 +15,7 @@ public class DnDGame extends Application
 
     private BorderPane borderPane;
     private TextArea chatBox;
+    private TextField commandBar;
     private MenuBar menuBar;
     private Menu menu = new Menu("Options");
     private MenuItem menuExit = new MenuItem("Exit");
@@ -23,6 +23,8 @@ public class DnDGame extends Application
     private StackPane pane;
 
     private GameBoard gameBoard;
+
+    private boolean messages = true;
 
     public static void main(String[] args) { launch(args); }
 
@@ -47,7 +49,7 @@ public class DnDGame extends Application
 
         //BorderPane sits on top of the Scene
         borderPane = new BorderPane();
-        borderPane.setPadding(new Insets(0, 0, 0, 0));
+        borderPane.setPadding(new Insets(0, 0, 10, 0));
         borderPane.setBackground(gameBG);
         borderPane.setTop(menuBar);
 
@@ -56,8 +58,17 @@ public class DnDGame extends Application
         chatBox.setStyle("-fx-opacity: 0.70; -fx-font-weight:bold");
         chatBox.setWrapText(true);
         chatBox.setEditable(false);
-        chatBox.setPrefWidth(310);
+        chatBox.setPrefWidth(240);
+        chatBox.appendText("Welcome to level 1!\n");
         borderPane.setLeft(chatBox);
+
+        //Create command bar
+        commandBar = new TextField();
+        commandBar.setStyle("-fx-opacity: 0.70; -fx-font-weight:bold");
+        commandBar.setPrefHeight(25);
+        commandBar.setAlignment(Pos.CENTER);
+        commandBar.appendText("Type commands here!");
+        borderPane.setBottom(commandBar);
 
         //Pane sits on top of the BorderPane
         pane = new StackPane();
@@ -71,7 +82,7 @@ public class DnDGame extends Application
         pane.setAlignment(Pos.CENTER);
 
         //Create scene and add BorderPane on top of it
-        scene = new Scene(borderPane, 1600, 960);
+        scene = new Scene(borderPane, 1200, 700);
         primaryStage.setTitle("DnD");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -82,17 +93,45 @@ public class DnDGame extends Application
             //Gets the current tile state of the board used for printing messages
             int state = gameBoard.getState();
 
-            if (state == 1)
+            if (state == 1 && messages)
                 chatBox.appendText("Moved to a tile!\n");
-            else if (state == 2)
+            else if (state == 2 && messages)
                 chatBox.appendText("Bumped into a wall!\n");
             else if (state == 3)
                 chatBox.appendText("You found a key in the chest!\n");
             else if (state == 4)
                 chatBox.appendText("You've found the door!\n");
+            else if (state == 5)
+                chatBox.appendText("You've opened the door!\n");
 
             //Reset state to 0
             gameBoard.setState();
         });
+
+        commandBar.setOnMouseClicked(MouseEvent ->
+        {
+            commandBar.clear();
+        });
+
+        commandBar.setOnKeyPressed(e -> {if(e.getCode().equals(KeyCode.ENTER))
+        {
+            String command = commandBar.getText();
+            //Commands
+            if (command.equals("!commands"))
+            {
+                chatBox.appendText("\nCommands:\n");
+                chatBox.appendText("!inventory\n");
+                chatBox.appendText("!pathMessages\n\n");
+            }
+            else if (command.equals("!inventory"))
+                chatBox.appendText(gameBoard.getPlayerInventory());
+            else if (command.equals("!pathMessages"))
+            {
+                chatBox.appendText((messages) ? "Tile messages off!\n" : "Tile messages on!\n");
+                messages = !messages;
+            }
+
+            commandBar.clear();
+        }});
     }
 }
