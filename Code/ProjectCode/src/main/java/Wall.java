@@ -8,12 +8,12 @@ public class Wall extends Tile
     Image image = new Image("rock.jpg");
     ImagePattern imagePattern = new ImagePattern(image);
 
-    Wall()
-    {
-        this.setWidth(100);
-        this.setHeight(100);
-        this.setFill(Paint.valueOf("#000000"));
-    }
+//    Wall()
+//    {
+//        this.setWidth(100);
+//        this.setHeight(100);
+//        this.setFill(Paint.valueOf("#000000"));
+//    }
 
     //If you encounter a new wall, fill it, otherwise return 0 to avoid printing to the chat bar
     public int setImage()

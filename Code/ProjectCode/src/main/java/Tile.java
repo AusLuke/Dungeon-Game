@@ -7,13 +7,15 @@ public class Tile extends Rectangle
 {
     Image image = new Image("grass.png");
     ImagePattern imagePattern = new ImagePattern(image);
+    Image image2 = new Image("fog.png");
+    ImagePattern imagePattern2 = new ImagePattern(image2);
     int tileStatus = 1;
 
     Tile()
     {
         this.setWidth(100);
         this.setHeight(100);
-        this.setFill(Paint.valueOf("#000000"));
+        this.setFill(imagePattern2);
     }
 
     //Flagged constructor for swapping tiles with the player

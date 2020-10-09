@@ -8,12 +8,12 @@ public class Chest extends Tile
     Image image = new Image("chest.jpg");
     ImagePattern imagePattern = new ImagePattern(image);
 
-    Chest()
-    {
-        this.setWidth(100);
-        this.setHeight(100);
-        this.setFill(Paint.valueOf("#000000"));
-    }
+//    Chest()
+//    {
+//        this.setWidth(100);
+//        this.setHeight(100);
+//        this.setFill(Paint.valueOf("#000000"));
+//    }
 
     //If you encounter a new chest, fill it, otherwise return 0 to avoid printing to the chat bar
     public int setImage()
