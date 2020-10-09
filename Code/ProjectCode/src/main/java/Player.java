@@ -33,8 +33,10 @@ public class Player extends Tile
         coordinates = new Pair<>(xPos, yPos);
     }
 
+    //Change the player's key status if they found a key or consumed one
     public void setKey()
     {
+        //Update the hash map to include a key, or decrement one
         if (!hasKey)
             inventory.put("Key", 1);
         else
@@ -42,11 +44,13 @@ public class Player extends Tile
         hasKey = !hasKey;
     }
 
+    //Check the player's key status
     public boolean checkKey()
     {
         return hasKey;
     }
 
+    //Creates a string to display the player's inventory
     public String getInventory()
     {
         StringBuilder list = new StringBuilder();

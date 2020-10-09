@@ -5,7 +5,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -62,7 +61,7 @@ public class DnDGame extends Application
         chatBox.appendText("Welcome to level 1!\n");
         borderPane.setLeft(chatBox);
 
-        //Create command bar
+        //Create the command bar
         commandBar = new TextField();
         commandBar.setStyle("-fx-opacity: 0.70; -fx-font-weight:bold");
         commandBar.setPrefHeight(25);
@@ -93,6 +92,7 @@ public class DnDGame extends Application
             //Gets the current tile state of the board used for printing messages
             int state = gameBoard.getState();
 
+            //Print out the messages if applicable
             if (state == 1 && messages)
                 chatBox.appendText("Moved to a tile!\n");
             else if (state == 2 && messages)
@@ -108,14 +108,17 @@ public class DnDGame extends Application
             gameBoard.setState();
         });
 
+        //Clears the command bar when clicked on
         commandBar.setOnMouseClicked(MouseEvent ->
         {
             commandBar.clear();
         });
 
+        //When an input is entered into the command bar, take action
         commandBar.setOnKeyPressed(e -> {if(e.getCode().equals(KeyCode.ENTER))
         {
             String command = commandBar.getText();
+
             //Commands
             if (command.equals("!commands"))
             {
@@ -131,6 +134,7 @@ public class DnDGame extends Application
                 messages = !messages;
             }
 
+            //Clear the command bar of the previous message
             commandBar.clear();
         }});
     }

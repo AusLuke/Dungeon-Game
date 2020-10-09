@@ -70,6 +70,8 @@ public class GameBoard extends GridPane
         }
         else if(source.getClass() == Chest.class){
             state = ((Chest) source).setImage();
+
+            //If the chest has been opened, update the player's key status
             if (state == 3)
                 player.setKey();
             return;
@@ -77,6 +79,8 @@ public class GameBoard extends GridPane
         else if (source.getClass() == Door.class)
         {
             state = ((Door)source).setImage();
+
+            //If the player has a key, open the door, and update the player's key status
             if (player.checkKey())
             {
                 state = 5;
@@ -119,6 +123,7 @@ public class GameBoard extends GridPane
         state = 0;
     }
 
+    //Return the string to be printed that displays the player's inventory
     public String getPlayerInventory()
     {
         return player.getInventory();
