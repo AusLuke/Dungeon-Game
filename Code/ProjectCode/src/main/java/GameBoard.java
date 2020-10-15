@@ -15,9 +15,6 @@ public class GameBoard extends GridPane
     {
         this.setHgap(1);
         this.setVgap(1);
-        track1.setVolume(0.05);
-        track1.setCycleCount(MediaPlayer.INDEFINITE);
-        track1.play();
 
         //Create map for game board
         for(int x = 0; x < 6; x++)
@@ -127,5 +124,12 @@ public class GameBoard extends GridPane
     public String getPlayerInventory()
     {
         return player.getInventory();
+    }
+
+    public void playMusic()
+    {
+        track1.setVolume(0.05);
+        track1.setCycleCount(MediaPlayer.INDEFINITE);
+        track1.play();
     }
 }

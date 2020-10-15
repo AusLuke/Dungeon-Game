@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 
 public class DnDGame extends Application
 {
+    private Scene opening;
     private Scene scene;
 
     private BorderPane borderPane;
@@ -18,6 +19,11 @@ public class DnDGame extends Application
     private MenuBar menuBar;
     private Menu menu = new Menu("Options");
     private MenuItem menuExit = new MenuItem("Exit");
+
+    private StackPane openingPane;
+    private VBox openingVBox = new VBox();
+    private Button playButton = new Button("Play!");
+    private Button muteButton = new Button("Mute");
 
     private StackPane pane;
 
@@ -80,11 +86,25 @@ public class DnDGame extends Application
         pane.getChildren().addAll(gameBoard.getGameBoard());
         pane.setAlignment(Pos.CENTER);
 
-        //Create scene and add BorderPane on top of it
-        scene = new Scene(borderPane, 1200, 700);
         primaryStage.setTitle("DnD");
-        primaryStage.setScene(scene);
+
+        //Display the opening screen
+        openingPane = new StackPane(playButton, muteButton);
+        StackPane.setAlignment(playButton, Pos.BOTTOM_CENTER);
+        StackPane.setAlignment(muteButton, Pos.BOTTOM_RIGHT);
+        opening = new Scene(openingPane, 1200 ,700);
+        primaryStage.setScene(opening);
         primaryStage.show();
+
+        //If the play button is clicked on, then start level 1
+        playButton.setOnAction(actionEvent ->
+        {
+            //Create scene and add BorderPane on top of it
+            scene = new Scene(borderPane, 1200, 700);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+            gameBoard.playMusic();
+        });
 
         //If the GridPane is clicked on, then output to the chat window if applicable
         gameBoard.setOnMouseClicked(MouseEvent ->
