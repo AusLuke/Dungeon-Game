@@ -30,6 +30,7 @@ public class DnDGame extends Application
     private Button playNow = new Button("Play now!");
     private Button aboutUs = new Button("About Us");
     private Button exit = new Button("Exit");
+    private Button back = new Button("Back");
 
     private StackPane pane;
 
@@ -105,7 +106,8 @@ public class DnDGame extends Application
         //Display menu options
         menuOptions.getChildren().addAll(playNow, aboutUs, exit);
         menuOptions.setAlignment(Pos.CENTER);
-        menuPane = new StackPane(menuOptions);
+        menuPane = new StackPane(menuOptions, muteButton);
+        StackPane.setAlignment(muteButton, Pos.BOTTOM_RIGHT);
         StackPane.setAlignment(menuOptions, Pos.BOTTOM_RIGHT);
 
         //If the play button is clicked on, then show menu options
