@@ -25,6 +25,12 @@ public class DnDGame extends Application
     private Button playButton = new Button("Play!");
     private Button muteButton = new Button("Mute");
 
+    private StackPane menuPane;
+    private VBox menuOptions = new VBox();
+    private Button playNow = new Button("Play now!");
+    private Button aboutUs = new Button("About Us");
+    private Button exit = new Button("Exit");
+
     private StackPane pane;
 
     private GameBoard gameBoard;
@@ -96,8 +102,24 @@ public class DnDGame extends Application
         primaryStage.setScene(opening);
         primaryStage.show();
 
-        //If the play button is clicked on, then start level 1
+        //Display menu options
+        menuOptions.getChildren().addAll(playNow, aboutUs, exit);
+        menuOptions.setAlignment(Pos.CENTER);
+        menuPane = new StackPane(menuOptions);
+        StackPane.setAlignment(menuOptions, Pos.BOTTOM_RIGHT);
+
+        //If the play button is clicked on, then show menu options
         playButton.setOnAction(actionEvent ->
+        {
+            //Create scene and add BorderPane on top of it
+            scene = new Scene(menuPane, 1200, 700);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+            //gameBoard.playMusic();
+        });
+
+        //If the play button is clicked on, then start level 1
+        playNow.setOnAction(actionEvent ->
         {
             //Create scene and add BorderPane on top of it
             scene = new Scene(borderPane, 1200, 700);
