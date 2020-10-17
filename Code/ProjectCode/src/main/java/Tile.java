@@ -1,4 +1,6 @@
 import javafx.scene.image.Image;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -10,6 +12,8 @@ public class Tile extends Rectangle
     Image image2 = new Image("fog.png");
     ImagePattern imagePattern2 = new ImagePattern(image2);
     int tileStatus = 1;
+    Media doorOpen = new Media(getClass().getClassLoader().getResource("walk.wav").toString()); // Sound effect, you can see it in every object that has a sound effect
+    MediaPlayer track = new MediaPlayer(doorOpen);
 
     Tile()
     {
@@ -24,6 +28,8 @@ public class Tile extends Rectangle
         tileStatus = 0;
         this.setWidth(100);
         this.setHeight(100);
+        track.setVolume(0.75);
+        track.play();
         this.setFill(imagePattern);
     }
 

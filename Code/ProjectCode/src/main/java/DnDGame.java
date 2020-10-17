@@ -1,12 +1,20 @@
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class DnDGame extends Application
 {
@@ -31,6 +39,12 @@ public class DnDGame extends Application
     private Button aboutUs = new Button("About Us");
     private Button exit = new Button("Exit");
     private Button back = new Button("Back");
+
+    Media hover = new Media(getClass().getClassLoader().getResource("FFXIV_Enter_Chat.mp3").toString());
+    MediaPlayer trackHover= new MediaPlayer(hover);
+
+    Media enter = new Media(getClass().getClassLoader().getResource("FFXIV_Confirm.mp3").toString());
+    MediaPlayer trackConfirm = new MediaPlayer(enter);
 
     private StackPane pane;
 
@@ -115,6 +129,89 @@ public class DnDGame extends Application
         {
             //Create scene and add BorderPane on top of it
             scene = new Scene(menuPane, 1200, 700);
+
+            //Create background for main menu
+            Image backgroundMenu = new Image("menuscreen.jpg");
+            BackgroundImage backgroundImageMenu = new BackgroundImage(backgroundMenu, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
+            Background gameBGMenu = new Background(backgroundImageMenu);
+            menuPane.setBackground(gameBGMenu);
+
+            //Change size and create the option banners
+            playNow.setPrefSize(200.0,70.0);
+            aboutUs.setPrefSize(200.0,70.0);
+            exit.setPrefSize(200.0,70.0);
+            Font font = Font.font("Britannic Bold",FontWeight.BOLD,20.0);
+            playNow.setFont(font);
+            aboutUs.setFont(font);
+            exit.setFont(font);
+
+//            muteButton.setPrefSize(200.0,100.0);
+            muteButton.setStyle("-fx-font-weight:bold; -fx-text-fill : white; -fx-font-size:15pt; -fx-border-color: red;");
+            muteButton.setBackground(Background.EMPTY);
+            // Button handlers for various things.
+            playNow.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent t) {
+                    playNow.setStyle("-fx-text-fill:#5DBFD7;");
+                    trackHover.seek(Duration.ZERO);
+                    trackHover.setVolume(0.05);
+                    trackHover.play();
+                }
+            });
+
+            playNow.setOnMouseExited(new EventHandler<MouseEvent>() {
+
+                @Override
+                public void handle(MouseEvent t) {
+                    playNow.setStyle("-fx-text-fill:BLACK;");
+                }
+            });
+
+            aboutUs.setOnMouseEntered(new EventHandler<MouseEvent>() {
+
+                @Override
+                public void handle(MouseEvent t) {
+                    aboutUs.setStyle("-fx-text-fill:#5DBFD7;");
+                    trackHover.seek(Duration.ZERO);
+                    trackHover.setVolume(0.05);
+                    trackHover.play();
+                }
+            });
+
+            aboutUs.setOnMouseExited(new EventHandler<MouseEvent>() {
+
+                @Override
+                public void handle(MouseEvent t) {
+                    aboutUs.setStyle("-fx-text-fill:BLACK;");
+                }
+            });
+
+            exit.setOnMouseEntered(new EventHandler<MouseEvent>() {
+
+                @Override
+                public void handle(MouseEvent t) {
+                    exit.setStyle("-fx-text-fill:#5DBFD7;");
+                    trackHover.seek(Duration.ZERO);
+                    trackHover.setVolume(0.05);
+                    trackHover.play();
+                }
+            });
+
+            exit.setOnMouseExited(new EventHandler<MouseEvent>() {
+
+                @Override
+                public void handle(MouseEvent t) {
+                    exit.setStyle("-fx-text-fill:BLACK;");
+                }
+            });
+
+            Image image = new Image("banner.png");
+            BackgroundImage backgroundImageOption = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
+            Background gameBGOption = new Background(backgroundImageOption);
+            playNow.setBackground(gameBGOption);
+            aboutUs.setBackground(gameBGOption);
+            exit.setBackground(gameBGOption);
+
             primaryStage.setScene(scene);
             primaryStage.show();
             //gameBoard.playMusic();
@@ -123,6 +220,9 @@ public class DnDGame extends Application
         //If the play button is clicked on, then start level 1
         playNow.setOnAction(actionEvent ->
         {
+            trackConfirm.setVolume(0.05);
+            trackConfirm.seek(Duration.ZERO);
+            trackConfirm.play();
             //Create scene and add BorderPane on top of it
             scene = new Scene(borderPane, 1200, 700);
             primaryStage.setScene(scene);
