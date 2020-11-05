@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -34,8 +35,8 @@ public class DnDGame extends Application
 
     //Create StackPane and children nodes for the opening scene
     private StackPane openingPane;
-    private Button playButton = new Button("Play!");
-    private Button muteButton1 = new Button("Mute");
+    private Button playButton = new Button();
+    private Button muteButton1 = new Button();
 
     //Create StackPane and children nodes for the menu scene
     private StackPane menuPane;
@@ -44,7 +45,7 @@ public class DnDGame extends Application
     private Button aboutUs = new Button("About Us");
     private Button exit = new Button("Exit");
     private Button back = new Button("Back");
-    private Button muteButton2 = new Button("Mute");
+    private Button muteButton2 = new Button();
 
     //Create StackPane and children nodes for the "about us" scene
     private StackPane aboutUsPane;
@@ -58,6 +59,10 @@ public class DnDGame extends Application
     MediaPlayer trackHover= new MediaPlayer(hover);
     Media enter = new Media(getClass().getClassLoader().getResource("FFXIV_Confirm.mp3").toString());
     MediaPlayer trackConfirm = new MediaPlayer(enter);
+
+    Media intro = new Media(getClass().getClassLoader().getResource("Dragon Intro.mp4").toString());
+    MediaPlayer introVideo = new MediaPlayer(intro);
+    MediaView mediaView = new MediaView(introVideo);
 
     private StackPane pane;
 
@@ -125,13 +130,39 @@ public class DnDGame extends Application
 
         primaryStage.setTitle("DnD");
 
+        //Setting up the video intro and mute button
+        introVideo.setAutoPlay(true);
+        introVideo.setCycleCount(MediaPlayer.INDEFINITE);
+        introVideo.setMute(true);
+
+        //Create background for play button and mute
+        playButton.setPrefSize(400,420);
+        BackgroundImage playBanner = new BackgroundImage(new Image("dragonBanner.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
+        Background playBG = new Background(playBanner);
+        playButton.setBackground(playBG);
+
+        muteButton1.setPrefSize(50,50);
+        muteButton2.setPrefSize(50,50);
+        BackgroundImage volumeImage = new BackgroundImage(new Image("volume.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
+        Background volumeBG = new Background(volumeImage);
+        muteButton1.setBackground(volumeBG);
+        muteButton2.setBackground(volumeBG);
+
+        //Background for mute image
+        BackgroundImage muteImage = new BackgroundImage(new Image("mute.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(0.80, 0.80, true, true, false, false));
+        Background muteBG = new Background(muteImage);
+
         //Display the opening screen
-        openingPane = new StackPane(playButton, muteButton1);
+        openingPane = new StackPane(mediaView, playButton, muteButton1);
         StackPane.setAlignment(playButton, Pos.BOTTOM_CENTER);
         StackPane.setAlignment(muteButton1, Pos.BOTTOM_RIGHT);
         opening = new Scene(openingPane, 1200 ,700);
         primaryStage.setScene(opening);
         primaryStage.show();
+
+        // BORRAT, PLEASE DELETE LATER
+        BackgroundImage borratIMG = new BackgroundImage(new Image("borrat.jpg"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(0.80, 0.80, true, true, false, false));
+        Background borratBG = new Background(borratIMG);
 
         //Display menu options
         menuOptions.getChildren().addAll(playNow, aboutUs, exit);
@@ -156,8 +187,6 @@ public class DnDGame extends Application
         exit.setFont(font);
 
         //muteButton.setPrefSize(200.0,100.0);
-        muteButton2.setStyle("-fx-font-weight:bold; -fx-text-fill : white; -fx-font-size:15pt; -fx-border-color: red;");
-        muteButton2.setBackground(Background.EMPTY);
 
         Image image = new Image("banner.png");
         BackgroundImage backgroundImageOption = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
@@ -172,6 +201,7 @@ public class DnDGame extends Application
         scene = new Scene(menuPane, 1200, 700);
         menuScene = new Scene(borderPane, 1200, 700);
         aboutUsScene = new Scene(aboutUsPane, 1200, 700);
+        aboutUsPane.setBackground(borratBG);
         introTrack.setVolume(0.05);
         introTrack.setCycleCount(MediaPlayer.INDEFINITE);
         introTrack.play();
@@ -179,9 +209,15 @@ public class DnDGame extends Application
         menuTrack.setVolume(0.05);
         menuTrack.setCycleCount(MediaPlayer.INDEFINITE);
 
+
         //If the play button is clicked on, then show menu options
         playButton.setOnAction(actionEvent ->
         {
+            // Confirm SFX
+            trackConfirm.setVolume(0.05);
+            trackConfirm.seek(Duration.ZERO);
+            trackConfirm.play();
+
             //Create scene and add BorderPane on top of it
             primaryStage.setScene(scene);
             primaryStage.show();
@@ -225,20 +261,33 @@ public class DnDGame extends Application
 
         muteButton1.setOnAction(actionEvent ->
         {
-            if (flip[0])
+
+            if (flip[0]) {
+                muteButton1.setBackground(muteBG);
+                muteButton2.setBackground(muteBG);
                 introTrack.pause();
-            else
+            }
+            else {
+                muteButton1.setBackground(volumeBG);
+                muteButton2.setBackground(volumeBG);
                 introTrack.play();
+            }
 
             flip[0] = !flip[0];
         });
 
         muteButton2.setOnAction(actionEvent ->
         {
-            if (flip[0])
+            if (flip[0]) {
+                muteButton1.setBackground(muteBG);
+                muteButton2.setBackground(muteBG);
                 menuTrack.pause();
-            else
+            }
+            else {
+                muteButton1.setBackground(volumeBG);
+                muteButton2.setBackground(volumeBG);
                 menuTrack.play();
+            }
 
             flip[0] = !flip[0];
         });
