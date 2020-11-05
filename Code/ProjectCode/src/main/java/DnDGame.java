@@ -19,6 +19,7 @@ import javafx.util.Duration;
 
 public class DnDGame extends Application
 {
+    //Initialize all scenes
     private Scene opening;
     private Scene scene;
     private Scene menuScene;
@@ -31,23 +32,30 @@ public class DnDGame extends Application
     private Menu menu = new Menu("Options");
     private MenuItem menuExit = new MenuItem("Exit");
 
+    //Create StackPane and children nodes for the opening scene
     private StackPane openingPane;
-    private VBox openingVBox = new VBox();
     private Button playButton = new Button("Play!");
-    private Button muteButton = new Button("Mute");
+    private Button muteButton1 = new Button("Mute");
 
+    //Create StackPane and children nodes for the menu scene
     private StackPane menuPane;
     private VBox menuOptions = new VBox();
     private Button playNow = new Button("Play now!");
     private Button aboutUs = new Button("About Us");
     private Button exit = new Button("Exit");
     private Button back = new Button("Back");
+    private Button muteButton2 = new Button("Mute");
 
+    //Create StackPane and children nodes for the "about us" scene
     private StackPane aboutUsPane;
 
+    //Add music for opening scene, menu, and SFX for buttons
+    Media introMusic = new Media(getClass().getClassLoader().getResource("introMusic.mp3").toString());
+    MediaPlayer introTrack = new MediaPlayer(introMusic);
+    Media menuMusic = new Media(getClass().getClassLoader().getResource("elevatorMusic.mp3").toString());
+    MediaPlayer menuTrack = new MediaPlayer(menuMusic);
     Media hover = new Media(getClass().getClassLoader().getResource("FFXIV_Enter_Chat.mp3").toString());
     MediaPlayer trackHover= new MediaPlayer(hover);
-
     Media enter = new Media(getClass().getClassLoader().getResource("FFXIV_Confirm.mp3").toString());
     MediaPlayer trackConfirm = new MediaPlayer(enter);
 
@@ -71,6 +79,9 @@ public class DnDGame extends Application
 
     public void start(Stage primaryStage) throws Exception
     {
+        //Switch for music
+        final boolean[] flip = {true};
+
         makeMenu();
 
         //Create background for BorderPane
@@ -115,9 +126,9 @@ public class DnDGame extends Application
         primaryStage.setTitle("DnD");
 
         //Display the opening screen
-        openingPane = new StackPane(playButton, muteButton);
+        openingPane = new StackPane(playButton, muteButton1);
         StackPane.setAlignment(playButton, Pos.BOTTOM_CENTER);
-        StackPane.setAlignment(muteButton, Pos.BOTTOM_RIGHT);
+        StackPane.setAlignment(muteButton1, Pos.BOTTOM_RIGHT);
         opening = new Scene(openingPane, 1200 ,700);
         primaryStage.setScene(opening);
         primaryStage.show();
@@ -125,8 +136,8 @@ public class DnDGame extends Application
         //Display menu options
         menuOptions.getChildren().addAll(playNow, aboutUs, exit);
         menuOptions.setAlignment(Pos.CENTER);
-        menuPane = new StackPane(menuOptions, muteButton);
-        StackPane.setAlignment(muteButton, Pos.BOTTOM_RIGHT);
+        menuPane = new StackPane(menuOptions, muteButton2);
+        StackPane.setAlignment(muteButton2, Pos.BOTTOM_RIGHT);
         StackPane.setAlignment(menuOptions, Pos.BOTTOM_RIGHT);
 
         //Create background for main menu
@@ -145,8 +156,8 @@ public class DnDGame extends Application
         exit.setFont(font);
 
         //muteButton.setPrefSize(200.0,100.0);
-        muteButton.setStyle("-fx-font-weight:bold; -fx-text-fill : white; -fx-font-size:15pt; -fx-border-color: red;");
-        muteButton.setBackground(Background.EMPTY);
+        muteButton2.setStyle("-fx-font-weight:bold; -fx-text-fill : white; -fx-font-size:15pt; -fx-border-color: red;");
+        muteButton2.setBackground(Background.EMPTY);
 
         Image image = new Image("banner.png");
         BackgroundImage backgroundImageOption = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
@@ -161,6 +172,12 @@ public class DnDGame extends Application
         scene = new Scene(menuPane, 1200, 700);
         menuScene = new Scene(borderPane, 1200, 700);
         aboutUsScene = new Scene(aboutUsPane, 1200, 700);
+        introTrack.setVolume(0.05);
+        introTrack.setCycleCount(MediaPlayer.INDEFINITE);
+        introTrack.play();
+
+        menuTrack.setVolume(0.05);
+        menuTrack.setCycleCount(MediaPlayer.INDEFINITE);
 
         //If the play button is clicked on, then show menu options
         playButton.setOnAction(actionEvent ->
@@ -168,7 +185,10 @@ public class DnDGame extends Application
             //Create scene and add BorderPane on top of it
             primaryStage.setScene(scene);
             primaryStage.show();
-            //gameBoard.playMusic();
+            introTrack.stop();
+
+            if (flip[0])
+                menuTrack.play();
         });
 
         //If the play button is clicked on, then start level 1
@@ -177,9 +197,11 @@ public class DnDGame extends Application
             trackConfirm.setVolume(0.05);
             trackConfirm.seek(Duration.ZERO);
             trackConfirm.play();
+
             //Create scene and add BorderPane on top of it
             primaryStage.setScene(menuScene);
             primaryStage.show();
+            menuTrack.stop();
             gameBoard.playMusic();
         });
 
@@ -198,12 +220,26 @@ public class DnDGame extends Application
         {
             primaryStage.setScene(scene);
             primaryStage.show();
-            //gameBoard.playMusic();
         });
 
-        muteButton.setOnAction(actionEvent ->
+        muteButton1.setOnAction(actionEvent ->
         {
-            System.out.println(23);
+            if (flip[0])
+                introTrack.pause();
+            else
+                introTrack.play();
+
+            flip[0] = !flip[0];
+        });
+
+        muteButton2.setOnAction(actionEvent ->
+        {
+            if (flip[0])
+                menuTrack.pause();
+            else
+                menuTrack.play();
+
+            flip[0] = !flip[0];
         });
 
         // Button handlers for various things.
