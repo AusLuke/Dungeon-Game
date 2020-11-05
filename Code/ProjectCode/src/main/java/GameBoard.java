@@ -13,6 +13,9 @@ public class GameBoard extends GridPane
 
     GameBoard()
     {
+        track1.setVolume(0.05);
+        track1.setCycleCount(MediaPlayer.INDEFINITE);
+
         this.setHgap(1);
         this.setVgap(1);
 
@@ -126,10 +129,13 @@ public class GameBoard extends GridPane
         return player.getInventory();
     }
 
-    public void playMusic()
+    public void onMusic()
     {
-        track1.setVolume(0.05);
-        track1.setCycleCount(MediaPlayer.INDEFINITE);
         track1.play();
+    }
+
+    public void offMusic()
+    {
+        track1.pause();
     }
 }

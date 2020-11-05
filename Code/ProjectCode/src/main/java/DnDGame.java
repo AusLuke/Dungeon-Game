@@ -202,7 +202,8 @@ public class DnDGame extends Application
             primaryStage.setScene(menuScene);
             primaryStage.show();
             menuTrack.stop();
-            gameBoard.playMusic();
+            if (flip[0])
+                gameBoard.onMusic();
         });
 
         aboutUs.setOnAction(actionEvent ->
@@ -337,7 +338,8 @@ public class DnDGame extends Application
             {
                 chatBox.appendText("\nCommands:\n");
                 chatBox.appendText("!inventory\n");
-                chatBox.appendText("!pathMessages\n\n");
+                chatBox.appendText("!pathMessages\n");
+                chatBox.appendText("!musicOn or !musicOff\n\n");
             }
             else if (command.equals("!inventory"))
                 chatBox.appendText(gameBoard.getPlayerInventory());
@@ -346,6 +348,10 @@ public class DnDGame extends Application
                 chatBox.appendText((messages) ? "Tile messages off!\n" : "Tile messages on!\n");
                 messages = !messages;
             }
+            else if (command.equals("!musicOn"))
+                gameBoard.onMusic();
+            else if (command.equals("!musicOff"))
+                gameBoard.offMusic();
 
             //Clear the command bar of the previous message
             commandBar.clear();
