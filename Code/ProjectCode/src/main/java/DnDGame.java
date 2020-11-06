@@ -15,8 +15,13 @@ import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class DnDGame extends Application
 {
@@ -44,11 +49,12 @@ public class DnDGame extends Application
     private Button playNow = new Button("Play now!");
     private Button aboutUs = new Button("About Us");
     private Button exit = new Button("Exit");
-    private Button back = new Button("Back");
+    private Button back = new Button();
     private Button muteButton2 = new Button();
 
     //Create StackPane and children nodes for the "about us" scene
     private StackPane aboutUsPane;
+    private Text aboutUsText;
 
     //Add music for opening scene, menu, and SFX for buttons
     Media introMusic = new Media(getClass().getClassLoader().getResource("introMusic.mp3").toString());
@@ -160,10 +166,6 @@ public class DnDGame extends Application
         primaryStage.setScene(opening);
         primaryStage.show();
 
-        // BORRAT, PLEASE DELETE LATER
-        BackgroundImage borratIMG = new BackgroundImage(new Image("borrat.jpg"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(0.80, 0.80, true, true, false, false));
-        Background borratBG = new Background(borratIMG);
-
         //Display menu options
         menuOptions.getChildren().addAll(playNow, aboutUs, exit);
         menuOptions.setAlignment(Pos.CENTER);
@@ -186,7 +188,6 @@ public class DnDGame extends Application
         aboutUs.setFont(font);
         exit.setFont(font);
 
-        //muteButton.setPrefSize(200.0,100.0);
 
         Image image = new Image("banner.png");
         BackgroundImage backgroundImageOption = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
@@ -196,12 +197,27 @@ public class DnDGame extends Application
         exit.setBackground(gameBGOption);
 
         aboutUsPane = new StackPane(back);
+        aboutUsText = new Text();
+        aboutUsText.setFont(Font.font("Times New Roman MS", FontWeight.EXTRA_BOLD,22));
+        aboutUsText.setTextAlignment(TextAlignment.LEFT);
+
+
+        aboutUsPane = new StackPane(aboutUsText, back);
+        StackPane.setAlignment(aboutUsText, Pos.TOP_LEFT);
         StackPane.setAlignment(back, Pos.BOTTOM_CENTER);
 
         scene = new Scene(menuPane, 1200, 700);
         menuScene = new Scene(borderPane, 1200, 700);
         aboutUsScene = new Scene(aboutUsPane, 1200, 700);
-        aboutUsPane.setBackground(borratBG);
+        final String test = "About Us:\n" +
+                "\n" +
+                "We are Sam Alammar, Luke Austin, Alex Choi, and  Andrew Macatangay. We are a  group of game developers from \n" +
+                "Chicago, Illinois. Collectively, we are known as Bohn Jell Entertainment.\n" +
+                "\n" +
+                "Welcome... to the Dankest Dungeon.\n" +
+                "You are Trogdor, a dragon who thirsts for gold and blood. You must descend through the dungeons, surviving as \n" +
+                "many levels as you can, and collecting as much gold as you can until you are satisfied with your bounty... or die.\n\n" +
+                "Good Luck.";
         introTrack.setVolume(0.05);
         introTrack.setCycleCount(MediaPlayer.INDEFINITE);
         introTrack.play();
@@ -242,9 +258,30 @@ public class DnDGame extends Application
                 gameBoard.onMusic();
         });
 
+        //Create background for about us pane
+        BackgroundImage aboutUsImage = new BackgroundImage(new Image("aboutUsPic.jpg"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
+        Background aboutBG = new Background(aboutUsImage);
+        aboutUsText.setStyle("-fx-background-color: rgba(0,0,0,0.7); -fx-font-weight: bold");
+        aboutUsPane.setBackground(aboutBG);
+
+        //Create image for back button
+        back.setPrefSize(300,320);
+        BackgroundImage backImage = new BackgroundImage(new Image("backIMG.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
+        Background backBG = new Background(backImage);
+        back.setBackground(backBG);
+
+
         aboutUs.setOnAction(actionEvent ->
         {
+
+            try
+            {
+                animateTeletype(test, aboutUsText);
+            }
+            catch (InterruptedException ignored){};
+
             primaryStage.setScene(aboutUsScene);
+
             primaryStage.show();
         });
 
@@ -349,6 +386,17 @@ public class DnDGame extends Application
             }
         });
 
+        menuExit.setOnAction(actionEvent ->
+        {
+            //Create scene and add BorderPane on top of it
+            primaryStage.setScene(scene);
+            primaryStage.show();
+            gameBoard.offMusic();
+
+            if (flip[0])
+                menuTrack.play();
+        });
+
         //If the GridPane is clicked on, then output to the chat window if applicable
         gameBoard.setOnMouseClicked(MouseEvent ->
         {
@@ -380,8 +428,8 @@ public class DnDGame extends Application
         //When an input is entered into the command bar, take action
         commandBar.setOnKeyPressed(e -> {if(e.getCode().equals(KeyCode.ENTER))
         {
-            String command = commandBar.getText();
 
+            String command = commandBar.getText();
             //Commands
             if (command.equals("!commands"))
             {
@@ -397,13 +445,46 @@ public class DnDGame extends Application
                 chatBox.appendText((messages) ? "Tile messages off!\n" : "Tile messages on!\n");
                 messages = !messages;
             }
-            else if (command.equals("!musicOn"))
+            else if (command.equals("!musicOn")) {
                 gameBoard.onMusic();
+                flip[0] = true;
+                muteButton1.setBackground(volumeBG);
+                muteButton2.setBackground(volumeBG);
+            }
             else if (command.equals("!musicOff"))
+            {
                 gameBoard.offMusic();
+                flip[0] = false;
+                muteButton1.setBackground(muteBG);
+                muteButton2.setBackground(muteBG);
+            }
 
             //Clear the command bar of the previous message
             commandBar.clear();
         }});
+    }
+    static Timer timer = null;
+    public static void animateTeletype(final String input, final Text text) throws InterruptedException
+    {
+        final String[] s = new String[1];
+        s[0] = " ";
+        final int[] i = new int[1];
+        i[0] = 0;
+        text.setText("");
+        StringBuilder txt = new StringBuilder("");
+        timer = new Timer(30, new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                s[0] = input.substring(i[0], i[0]+1);
+                i[0]++;
+                txt.append(s[0]);
+                text.setText(txt.toString());
+                if(text.getText().equals(input))
+                    timer.stop();
+            }
+        });
+        timer.start();
     }
 }
