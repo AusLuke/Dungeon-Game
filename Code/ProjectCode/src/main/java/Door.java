@@ -21,11 +21,15 @@ public class Door extends Tile
     //If you encounter a new door, fill it, otherwise return 0 to avoid printing to the chat bar
     public int setImage()
     {
-        if (visited) return 0;
         this.setFill(imagePattern);
-        visited = true;
+        if (!visited)
+        {
+            visited = !visited;
+            return 0;
+        }
         track.setVolume(0.75);
         track.play();
         return 4;
     }
+
 }

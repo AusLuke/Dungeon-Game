@@ -72,7 +72,9 @@ public class DnDGame extends Application
 
     private StackPane pane;
 
-    private GameBoard gameBoard;
+    private Level1 level1;
+    private Level2 level2 = new Level2();
+    private int currentLevel;
 
     private boolean messages = true;
 
@@ -129,10 +131,11 @@ public class DnDGame extends Application
         borderPane.setCenter(pane);
 
         //Create a game board which has a Grid Pane that sits on top of the Pane
-        gameBoard = new GameBoard();
-        gameBoard.getGameBoard().setAlignment(Pos.CENTER);
-        pane.getChildren().addAll(gameBoard.getGameBoard());
+        level1 = new Level1();
+        level1.getGameBoard().setAlignment(Pos.CENTER);
+        pane.getChildren().addAll(level1.getGameBoard());
         pane.setAlignment(Pos.CENTER);
+        currentLevel = 1;
 
         primaryStage.setTitle("DnD");
 
@@ -255,7 +258,7 @@ public class DnDGame extends Application
             primaryStage.show();
             menuTrack.stop();
             if (flip[0])
-                gameBoard.onMusic();
+                level1.onMusic();
         });
 
         //Create background for about us pane
@@ -281,7 +284,6 @@ public class DnDGame extends Application
             catch (InterruptedException ignored){};
 
             primaryStage.setScene(aboutUsScene);
-
             primaryStage.show();
         });
 
@@ -391,17 +393,20 @@ public class DnDGame extends Application
             //Create scene and add BorderPane on top of it
             primaryStage.setScene(scene);
             primaryStage.show();
-            gameBoard.offMusic();
+            if (currentLevel == 1)
+                level1.offMusic();
+            else if (currentLevel == 2)
+                level2.offMusic();
 
             if (flip[0])
                 menuTrack.play();
         });
 
         //If the GridPane is clicked on, then output to the chat window if applicable
-        gameBoard.setOnMouseClicked(MouseEvent ->
+        level1.setOnMouseClicked(MouseEvent ->
         {
             //Gets the current tile state of the board used for printing messages
-            int state = gameBoard.getState();
+            int state = level1.getState();
 
             //Print out the messages if applicable
             if (state == 1 && messages)
@@ -413,10 +418,59 @@ public class DnDGame extends Application
             else if (state == 4)
                 chatBox.appendText("You've found the door!\n");
             else if (state == 5)
+            {
                 chatBox.appendText("You've opened the door!\n");
 
+                level2.getGameBoard().setAlignment(Pos.CENTER);
+                pane.getChildren().removeAll(level1.getGameBoard());
+                pane.getChildren().addAll(level2.getGameBoard());
+                Image background2 = new Image("backIMG.png");
+                BackgroundImage backgroundImage2 = new BackgroundImage(background2, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
+                Background gameBG2 = new Background(backgroundImage2);
+                borderPane.setBackground(gameBG2);
+                level1.offMusic();
+                if (flip[0])
+                    level2.onMusic();
+
+            }
+
             //Reset state to 0
-            gameBoard.setState();
+            level1.setState();
+        });
+
+        //If the GridPane is clicked on, then output to the chat window if applicable
+        level2.setOnMouseClicked(MouseEvent ->
+        {
+            //Gets the current tile state of the board used for printing messages
+            int state = level2.getState();
+
+            //Print out the messages if applicable
+            if (state == 1 && messages)
+                chatBox.appendText("Moved to a tile!\n");
+            else if (state == 2 && messages)
+                chatBox.appendText("Bumped into a wall!\n");
+            else if (state == 3)
+                chatBox.appendText("You found a key in the chest!\n");
+            else if (state == 4)
+                chatBox.appendText("You've found the door!\n");
+            else if (state == 5)
+            {
+                chatBox.appendText("You've opened the door!\n");
+                /*level2 = new Level2();
+                level2.getGameBoard().setAlignment(Pos.CENTER);
+                pane.getChildren().removeAll(level1.getGameBoard());
+                pane.getChildren().addAll(level2.getGameBoard());
+                Image background2 = new Image("backIMG.png");
+                BackgroundImage backgroundImage2 = new BackgroundImage(background2, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
+                Background gameBG2 = new Background(backgroundImage2);
+                borderPane.setBackground(gameBG2);
+                level1.offMusic();
+                if (flip[0])
+                    level2.onMusic();*/
+            }
+
+            //Reset state to 0
+            level2.setState();
         });
 
         //Clears the command bar when clicked on
@@ -439,21 +493,32 @@ public class DnDGame extends Application
                 chatBox.appendText("!musicOn or !musicOff\n\n");
             }
             else if (command.equals("!inventory"))
-                chatBox.appendText(gameBoard.getPlayerInventory());
+            {
+                if (currentLevel == 1)
+                    chatBox.appendText(level1.getPlayerInventory());
+                else if (currentLevel == 2)
+                    chatBox.appendText(level2.getPlayerInventory());
+            }
             else if (command.equals("!pathMessages"))
             {
                 chatBox.appendText((messages) ? "Tile messages off!\n" : "Tile messages on!\n");
                 messages = !messages;
             }
             else if (command.equals("!musicOn")) {
-                gameBoard.onMusic();
+                if (currentLevel == 1)
+                    level1.onMusic();
+                else if (currentLevel == 2)
+                    level2.onMusic();
                 flip[0] = true;
                 muteButton1.setBackground(volumeBG);
                 muteButton2.setBackground(volumeBG);
             }
             else if (command.equals("!musicOff"))
             {
-                gameBoard.offMusic();
+                if (currentLevel == 1)
+                    level1.offMusic();
+                else if (currentLevel == 2)
+                    level2.offMusic();
                 flip[0] = false;
                 muteButton1.setBackground(muteBG);
                 muteButton2.setBackground(muteBG);
