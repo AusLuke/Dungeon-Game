@@ -25,7 +25,6 @@ public class Tile extends Rectangle
     //Flagged constructor for swapping tiles with the player
     Tile(int flag)
     {
-        System.out.print("Shar muta");
         tileStatus = 0;
         this.setWidth(100);
         this.setHeight(100);

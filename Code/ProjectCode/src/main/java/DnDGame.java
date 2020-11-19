@@ -424,7 +424,7 @@ public class DnDGame extends Application
                 level2.getGameBoard().setAlignment(Pos.CENTER);
                 pane.getChildren().removeAll(level1.getGameBoard());
                 pane.getChildren().addAll(level2.getGameBoard());
-                Image background2 = new Image("backIMG.png");
+                Image background2 = new Image("levelTwoBackground.jpg");
                 BackgroundImage backgroundImage2 = new BackgroundImage(background2, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
                 Background gameBG2 = new Background(backgroundImage2);
                 borderPane.setBackground(gameBG2);

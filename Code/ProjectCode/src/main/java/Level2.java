@@ -6,15 +6,15 @@ import javafx.scene.media.MediaPlayer;
 
 public class Level2 extends GridPane
 {
-    Media levelOneMusic = new Media(getClass().getClassLoader().getResource("elevatorMusic.mp3").toString());
-    MediaPlayer track1 = new MediaPlayer(levelOneMusic);
+    Media levelTwoMusic = new Media(getClass().getClassLoader().getResource("Determination OST.mp3").toString());
+    MediaPlayer track = new MediaPlayer(levelTwoMusic);
     Player player = new Player();
     private int state;
 
     Level2()
     {
-        track1.setVolume(0.05);
-        track1.setCycleCount(MediaPlayer.INDEFINITE);
+        track.setVolume(0.05);
+        track.setCycleCount(MediaPlayer.INDEFINITE);
 
         this.setHgap(1);
         this.setVgap(1);
@@ -137,11 +137,11 @@ public class Level2 extends GridPane
 
     public void onMusic()
     {
-        track1.play();
+        track.play();
     }
 
     public void offMusic()
     {
-        track1.pause();
+        track.pause();
     }
 }
