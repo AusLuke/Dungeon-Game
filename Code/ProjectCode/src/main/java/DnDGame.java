@@ -74,6 +74,7 @@ public class DnDGame extends Application
 
     private Level1 level1;
     private Level2 level2 = new Level2();
+    private Level3 level3 = new Level3();
     private int currentLevel;
 
     private boolean messages = true;
@@ -165,7 +166,7 @@ public class DnDGame extends Application
         openingPane = new StackPane(mediaView, playButton, muteButton1);
         StackPane.setAlignment(playButton, Pos.BOTTOM_CENTER);
         StackPane.setAlignment(muteButton1, Pos.BOTTOM_RIGHT);
-        opening = new Scene(openingPane, 1200 ,700);
+        opening = new Scene(openingPane, 1600 ,700);
         primaryStage.setScene(opening);
         primaryStage.show();
 
@@ -209,9 +210,9 @@ public class DnDGame extends Application
         StackPane.setAlignment(aboutUsText, Pos.TOP_LEFT);
         StackPane.setAlignment(back, Pos.BOTTOM_CENTER);
 
-        scene = new Scene(menuPane, 1200, 700);
-        menuScene = new Scene(borderPane, 1200, 700);
-        aboutUsScene = new Scene(aboutUsPane, 1200, 700);
+        scene = new Scene(menuPane, 1600, 700);
+        menuScene = new Scene(borderPane, 1600, 700);
+        aboutUsScene = new Scene(aboutUsPane, 1600, 700);
         final String test = "About Us:\n" +
                 "\n" +
                 "We are Sam Alammar, Luke Austin, Alex Choi, and  Andrew Macatangay. We are a  group of game developers from \n" +
@@ -258,7 +259,14 @@ public class DnDGame extends Application
             primaryStage.show();
             menuTrack.stop();
             if (flip[0])
-                level1.onMusic();
+            {
+                if (currentLevel == 1)
+                    level1.onMusic();
+                else if (currentLevel == 2)
+                    level2.onMusic();
+                else if (currentLevel == 3)
+                    level3.onMusic();
+            }
         });
 
         //Create background for about us pane
@@ -276,7 +284,6 @@ public class DnDGame extends Application
 
         aboutUs.setOnAction(actionEvent ->
         {
-
             try
             {
                 animateTeletype(test, aboutUsText);
@@ -397,6 +404,8 @@ public class DnDGame extends Application
                 level1.offMusic();
             else if (currentLevel == 2)
                 level2.offMusic();
+            else if (currentLevel == 3)
+                level3.offMusic();
 
             if (flip[0])
                 menuTrack.play();
@@ -428,6 +437,7 @@ public class DnDGame extends Application
                 BackgroundImage backgroundImage2 = new BackgroundImage(background2, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
                 Background gameBG2 = new Background(backgroundImage2);
                 borderPane.setBackground(gameBG2);
+                currentLevel = 2;
                 level1.offMusic();
                 if (flip[0])
                     level2.onMusic();
@@ -456,21 +466,49 @@ public class DnDGame extends Application
             else if (state == 5)
             {
                 chatBox.appendText("You've opened the door!\n");
-                /*level2 = new Level2();
-                level2.getGameBoard().setAlignment(Pos.CENTER);
-                pane.getChildren().removeAll(level1.getGameBoard());
-                pane.getChildren().addAll(level2.getGameBoard());
-                Image background2 = new Image("backIMG.png");
-                BackgroundImage backgroundImage2 = new BackgroundImage(background2, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
-                Background gameBG2 = new Background(backgroundImage2);
-                borderPane.setBackground(gameBG2);
-                level1.offMusic();
+                level3 = new Level3();
+                level3.getGameBoard().setAlignment(Pos.CENTER);
+                pane.getChildren().removeAll(level2.getGameBoard());
+                pane.getChildren().addAll(level3.getGameBoard());
+                Image background3 = new Image("backIMG.png");
+                BackgroundImage backgroundImage3 = new BackgroundImage(background3, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
+                Background gameBG3 = new Background(backgroundImage3);
+                borderPane.setBackground(gameBG3);
+                currentLevel = 3;
+                level2.offMusic();
                 if (flip[0])
-                    level2.onMusic();*/
+                    level2.onMusic();
             }
 
             //Reset state to 0
             level2.setState();
+        });
+
+        //If the GridPane is clicked on, then output to the chat window if applicable
+        level3.setOnMouseClicked(MouseEvent ->
+        {
+            //Gets the current tile state of the board used for printing messages
+            int state = level3.getState();
+
+            //Print out the messages if applicable
+            if (state == 1 && messages)
+                chatBox.appendText("Moved to a tile!\n");
+            else if (state == 2 && messages)
+                chatBox.appendText("Bumped into a wall!\n");
+            else if (state == 3)
+                chatBox.appendText("You found a key in the chest!\n");
+            else if (state == 4)
+                chatBox.appendText("You've found the door!\n");
+            else if (state == 5)
+            {
+                chatBox.appendText("You've opened the door!\n");
+                level3.offMusic();
+                if (flip[0])
+                    level3.onMusic();
+            }
+
+            //Reset state to 0
+            level3.setState();
         });
 
         //Clears the command bar when clicked on
@@ -498,6 +536,8 @@ public class DnDGame extends Application
                     chatBox.appendText(level1.getPlayerInventory());
                 else if (currentLevel == 2)
                     chatBox.appendText(level2.getPlayerInventory());
+                else if (currentLevel == 3)
+                    chatBox.appendText(level3.getPlayerInventory());
             }
             else if (command.equals("!pathMessages"))
             {
@@ -509,6 +549,8 @@ public class DnDGame extends Application
                     level1.onMusic();
                 else if (currentLevel == 2)
                     level2.onMusic();
+                else if (currentLevel == 3)
+                    level3.onMusic();
                 flip[0] = true;
                 muteButton1.setBackground(volumeBG);
                 muteButton2.setBackground(volumeBG);
@@ -519,10 +561,14 @@ public class DnDGame extends Application
                     level1.offMusic();
                 else if (currentLevel == 2)
                     level2.offMusic();
+                else if (currentLevel == 3)
+                    level3.offMusic();
                 flip[0] = false;
                 muteButton1.setBackground(muteBG);
                 muteButton2.setBackground(muteBG);
             }
+            else
+                chatBox.appendText("Command not found!\n");
 
             //Clear the command bar of the previous message
             commandBar.clear();
