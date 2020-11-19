@@ -1,0 +1,331 @@
+Index: Code/ProjectCode/src/main/java/DnDGame.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import javafx.application.Application;\r\nimport javafx.application.Platform;\r\nimport javafx.event.EventHandler;\r\nimport javafx.geometry.Insets;\r\nimport javafx.geometry.Pos;\r\nimport javafx.scene.Scene;\r\nimport javafx.scene.control.*;\r\nimport javafx.scene.image.Image;\r\nimport javafx.scene.input.KeyCode;\r\nimport javafx.scene.input.MouseEvent;\r\nimport javafx.scene.layout.*;\r\nimport javafx.scene.media.Media;\r\nimport javafx.scene.media.MediaPlayer;\r\nimport javafx.scene.media.MediaView;\r\nimport javafx.scene.paint.Color;\r\nimport javafx.scene.text.Font;\r\nimport javafx.scene.text.FontWeight;\r\nimport javafx.stage.Stage;\r\nimport javafx.util.Duration;\r\n\r\npublic class DnDGame extends Application\r\n{\r\n    //Initialize all scenes\r\n    private Scene opening;\r\n    private Scene scene;\r\n    private Scene menuScene;\r\n    private Scene aboutUsScene;\r\n\r\n    private BorderPane borderPane;\r\n    private TextArea chatBox;\r\n    private TextField commandBar;\r\n    private MenuBar menuBar;\r\n    private Menu menu = new Menu(\"Options\");\r\n    private MenuItem menuExit = new MenuItem(\"Exit\");\r\n\r\n    //Create StackPane and children nodes for the opening scene\r\n    private StackPane openingPane;\r\n    private Button playButton = new Button();\r\n    private Button muteButton1 = new Button();\r\n\r\n    //Create StackPane and children nodes for the menu scene\r\n    private StackPane menuPane;\r\n    private VBox menuOptions = new VBox();\r\n    private Button playNow = new Button(\"Play now!\");\r\n    private Button aboutUs = new Button(\"About Us\");\r\n    private Button exit = new Button(\"Exit\");\r\n    private Button back = new Button(\"Back\");\r\n    private Button muteButton2 = new Button();\r\n\r\n    //Create StackPane and children nodes for the \"about us\" scene\r\n    private StackPane aboutUsPane;\r\n\r\n    //Add music for opening scene, menu, and SFX for buttons\r\n    Media introMusic = new Media(getClass().getClassLoader().getResource(\"introMusic.mp3\").toString());\r\n    MediaPlayer introTrack = new MediaPlayer(introMusic);\r\n    Media menuMusic = new Media(getClass().getClassLoader().getResource(\"elevatorMusic.mp3\").toString());\r\n    MediaPlayer menuTrack = new MediaPlayer(menuMusic);\r\n    Media hover = new Media(getClass().getClassLoader().getResource(\"FFXIV_Enter_Chat.mp3\").toString());\r\n    MediaPlayer trackHover= new MediaPlayer(hover);\r\n    Media enter = new Media(getClass().getClassLoader().getResource(\"FFXIV_Confirm.mp3\").toString());\r\n    MediaPlayer trackConfirm = new MediaPlayer(enter);\r\n\r\n    Media intro = new Media(getClass().getClassLoader().getResource(\"Dragon Intro.mp4\").toString());\r\n    MediaPlayer introVideo = new MediaPlayer(intro);\r\n    MediaView mediaView = new MediaView(introVideo);\r\n\r\n    private StackPane pane;\r\n\r\n    private GameBoard gameBoard;\r\n\r\n    private boolean messages = true;\r\n\r\n    public static void main(String[] args) { launch(args); }\r\n\r\n    public void makeMenu()\r\n    {\r\n        //Create MenuBar\r\n        menuBar = new MenuBar();\r\n\r\n        //Add menu items to menu\r\n        menu.getItems().addAll(menuExit);\r\n        menuBar.getMenus().addAll(menu);\r\n    }\r\n\r\n    public void start(Stage primaryStage) throws Exception\r\n    {\r\n        //Switch for music\r\n        final boolean[] flip = {true};\r\n\r\n        makeMenu();\r\n\r\n        //Create background for BorderPane\r\n        Image background = new Image(\"background.png\");\r\n        BackgroundImage backgroundImage1 = new BackgroundImage(background, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));\r\n        Background gameBG = new Background(backgroundImage1);\r\n\r\n        //BorderPane sits on top of the Scene\r\n        borderPane = new BorderPane();\r\n        borderPane.setPadding(new Insets(0, 0, 10, 0));\r\n        borderPane.setBackground(gameBG);\r\n        borderPane.setTop(menuBar);\r\n\r\n        //Create the chat box\r\n        chatBox = new TextArea();\r\n        chatBox.setStyle(\"-fx-opacity: 0.70; -fx-font-weight:bold\");\r\n        chatBox.setWrapText(true);\r\n        chatBox.setEditable(false);\r\n        chatBox.setPrefWidth(240);\r\n        chatBox.appendText(\"Welcome to level 1!\\n\");\r\n        borderPane.setLeft(chatBox);\r\n\r\n        //Create the command bar\r\n        commandBar = new TextField();\r\n        commandBar.setStyle(\"-fx-opacity: 0.70; -fx-font-weight:bold\");\r\n        commandBar.setPrefHeight(25);\r\n        commandBar.setAlignment(Pos.CENTER);\r\n        commandBar.appendText(\"Type commands here!\");\r\n        borderPane.setBottom(commandBar);\r\n\r\n        //Pane sits on top of the BorderPane\r\n        pane = new StackPane();\r\n        pane.setPadding(new Insets(10, 10, 10, 10));\r\n        borderPane.setCenter(pane);\r\n\r\n        //Create a game board which has a Grid Pane that sits on top of the Pane\r\n        gameBoard = new GameBoard();\r\n        gameBoard.getGameBoard().setAlignment(Pos.CENTER);\r\n        pane.getChildren().addAll(gameBoard.getGameBoard());\r\n        pane.setAlignment(Pos.CENTER);\r\n\r\n        primaryStage.setTitle(\"DnD\");\r\n\r\n        //Setting up the video intro and mute button\r\n        introVideo.setAutoPlay(true);\r\n        introVideo.setCycleCount(MediaPlayer.INDEFINITE);\r\n        introVideo.setMute(true);\r\n\r\n        //Create background for play button and mute\r\n        playButton.setPrefSize(400,420);\r\n        BackgroundImage playBanner = new BackgroundImage(new Image(\"dragonBanner.png\"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));\r\n        Background playBG = new Background(playBanner);\r\n        playButton.setBackground(playBG);\r\n\r\n        muteButton1.setPrefSize(50,50);\r\n        muteButton2.setPrefSize(50,50);\r\n        BackgroundImage volumeImage = new BackgroundImage(new Image(\"volume.png\"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));\r\n        Background volumeBG = new Background(volumeImage);\r\n        muteButton1.setBackground(volumeBG);\r\n        muteButton2.setBackground(volumeBG);\r\n\r\n        //Background for mute image\r\n        BackgroundImage muteImage = new BackgroundImage(new Image(\"mute.png\"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(0.80, 0.80, true, true, false, false));\r\n        Background muteBG = new Background(muteImage);\r\n\r\n        //Display the opening screen\r\n        openingPane = new StackPane(mediaView, playButton, muteButton1);\r\n        StackPane.setAlignment(playButton, Pos.BOTTOM_CENTER);\r\n        StackPane.setAlignment(muteButton1, Pos.BOTTOM_RIGHT);\r\n        opening = new Scene(openingPane, 1200 ,700);\r\n        primaryStage.setScene(opening);\r\n        primaryStage.show();\r\n\r\n        // BORRAT, PLEASE DELETE LATER\r\n        BackgroundImage borratIMG = new BackgroundImage(new Image(\"borrat.jpg\"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(0.80, 0.80, true, true, false, false));\r\n        Background borratBG = new Background(borratIMG);\r\n\r\n        //Display menu options\r\n        menuOptions.getChildren().addAll(playNow, aboutUs, exit);\r\n        menuOptions.setAlignment(Pos.CENTER);\r\n        menuPane = new StackPane(menuOptions, muteButton2);\r\n        StackPane.setAlignment(muteButton2, Pos.BOTTOM_RIGHT);\r\n        StackPane.setAlignment(menuOptions, Pos.BOTTOM_RIGHT);\r\n\r\n        //Create background for main menu\r\n        Image backgroundMenu = new Image(\"menuscreen.jpg\");\r\n        BackgroundImage backgroundImageMenu = new BackgroundImage(backgroundMenu, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));\r\n        Background gameBGMenu = new Background(backgroundImageMenu);\r\n        menuPane.setBackground(gameBGMenu);\r\n\r\n        //Change size and create the option banners\r\n        playNow.setPrefSize(200.0,70.0);\r\n        aboutUs.setPrefSize(200.0,70.0);\r\n        exit.setPrefSize(200.0,70.0);\r\n        Font font = Font.font(\"Britannic Bold\",FontWeight.BOLD,20.0);\r\n        playNow.setFont(font);\r\n        aboutUs.setFont(font);\r\n        exit.setFont(font);\r\n\r\n        //muteButton.setPrefSize(200.0,100.0);\r\n\r\n        Image image = new Image(\"banner.png\");\r\n        BackgroundImage backgroundImageOption = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));\r\n        Background gameBGOption = new Background(backgroundImageOption);\r\n        playNow.setBackground(gameBGOption);\r\n        aboutUs.setBackground(gameBGOption);\r\n        exit.setBackground(gameBGOption);\r\n\r\n        aboutUsPane = new StackPane(back);\r\n        StackPane.setAlignment(back, Pos.BOTTOM_CENTER);\r\n\r\n        scene = new Scene(menuPane, 1200, 700);\r\n        menuScene = new Scene(borderPane, 1200, 700);\r\n        aboutUsScene = new Scene(aboutUsPane, 1200, 700);\r\n        aboutUsPane.setBackground(borratBG);\r\n        introTrack.setVolume(0.05);\r\n        introTrack.setCycleCount(MediaPlayer.INDEFINITE);\r\n        introTrack.play();\r\n\r\n        menuTrack.setVolume(0.05);\r\n        menuTrack.setCycleCount(MediaPlayer.INDEFINITE);\r\n\r\n\r\n        //If the play button is clicked on, then show menu options\r\n        playButton.setOnAction(actionEvent ->\r\n        {\r\n            // Confirm SFX\r\n            trackConfirm.setVolume(0.05);\r\n            trackConfirm.seek(Duration.ZERO);\r\n            trackConfirm.play();\r\n\r\n            //Create scene and add BorderPane on top of it\r\n            primaryStage.setScene(scene);\r\n            primaryStage.show();\r\n            introTrack.stop();\r\n\r\n            if (flip[0])\r\n                menuTrack.play();\r\n        });\r\n\r\n        //If the play button is clicked on, then start level 1\r\n        playNow.setOnAction(actionEvent ->\r\n        {\r\n            trackConfirm.setVolume(0.05);\r\n            trackConfirm.seek(Duration.ZERO);\r\n            trackConfirm.play();\r\n\r\n            //Create scene and add BorderPane on top of it\r\n            primaryStage.setScene(menuScene);\r\n            primaryStage.show();\r\n            menuTrack.stop();\r\n            if (flip[0])\r\n                gameBoard.onMusic();\r\n        });\r\n\r\n        aboutUs.setOnAction(actionEvent ->\r\n        {\r\n            primaryStage.setScene(aboutUsScene);\r\n            primaryStage.show();\r\n        });\r\n\r\n        exit.setOnAction(actionEvent ->\r\n        {\r\n            Platform.exit();\r\n        });\r\n\r\n        back.setOnAction(actionEvent ->\r\n        {\r\n            primaryStage.setScene(scene);\r\n            primaryStage.show();\r\n        });\r\n\r\n        muteButton1.setOnAction(actionEvent ->\r\n        {\r\n\r\n            if (flip[0]) {\r\n                muteButton1.setBackground(muteBG);\r\n                muteButton2.setBackground(muteBG);\r\n                introTrack.pause();\r\n            }\r\n            else {\r\n                muteButton1.setBackground(volumeBG);\r\n                muteButton2.setBackground(volumeBG);\r\n                introTrack.play();\r\n            }\r\n\r\n            flip[0] = !flip[0];\r\n        });\r\n\r\n        muteButton2.setOnAction(actionEvent ->\r\n        {\r\n            if (flip[0]) {\r\n                muteButton1.setBackground(muteBG);\r\n                muteButton2.setBackground(muteBG);\r\n                menuTrack.pause();\r\n            }\r\n            else {\r\n                muteButton1.setBackground(volumeBG);\r\n                muteButton2.setBackground(volumeBG);\r\n                menuTrack.play();\r\n            }\r\n\r\n            flip[0] = !flip[0];\r\n        });\r\n\r\n        // Button handlers for various things.\r\n        playNow.setOnMouseEntered(new EventHandler<MouseEvent>() {\r\n            @Override\r\n            public void handle(MouseEvent t) {\r\n                playNow.setStyle(\"-fx-text-fill:#5DBFD7;\");\r\n                trackHover.seek(Duration.ZERO);\r\n                trackHover.setVolume(0.05);\r\n                trackHover.play();\r\n            }\r\n        });\r\n\r\n        playNow.setOnMouseExited(new EventHandler<MouseEvent>() {\r\n\r\n            @Override\r\n            public void handle(MouseEvent t) {\r\n                playNow.setStyle(\"-fx-text-fill:BLACK;\");\r\n            }\r\n        });\r\n\r\n        aboutUs.setOnMouseEntered(new EventHandler<MouseEvent>() {\r\n\r\n            @Override\r\n            public void handle(MouseEvent t) {\r\n                aboutUs.setStyle(\"-fx-text-fill:#5DBFD7;\");\r\n                trackHover.seek(Duration.ZERO);\r\n                trackHover.setVolume(0.05);\r\n                trackHover.play();\r\n            }\r\n        });\r\n\r\n        aboutUs.setOnMouseExited(new EventHandler<MouseEvent>() {\r\n\r\n            @Override\r\n            public void handle(MouseEvent t) {\r\n                aboutUs.setStyle(\"-fx-text-fill:BLACK;\");\r\n            }\r\n        });\r\n\r\n        exit.setOnMouseEntered(new EventHandler<MouseEvent>() {\r\n\r\n            @Override\r\n            public void handle(MouseEvent t) {\r\n                exit.setStyle(\"-fx-text-fill:#5DBFD7;\");\r\n                trackHover.seek(Duration.ZERO);\r\n                trackHover.setVolume(0.05);\r\n                trackHover.play();\r\n            }\r\n        });\r\n\r\n        exit.setOnMouseExited(new EventHandler<MouseEvent>() {\r\n\r\n            @Override\r\n            public void handle(MouseEvent t) {\r\n                exit.setStyle(\"-fx-text-fill:BLACK;\");\r\n            }\r\n        });\r\n\r\n        //If the GridPane is clicked on, then output to the chat window if applicable\r\n        gameBoard.setOnMouseClicked(MouseEvent ->\r\n        {\r\n            //Gets the current tile state of the board used for printing messages\r\n            int state = gameBoard.getState();\r\n\r\n            //Print out the messages if applicable\r\n            if (state == 1 && messages)\r\n                chatBox.appendText(\"Moved to a tile!\\n\");\r\n            else if (state == 2 && messages)\r\n                chatBox.appendText(\"Bumped into a wall!\\n\");\r\n            else if (state == 3)\r\n                chatBox.appendText(\"You found a key in the chest!\\n\");\r\n            else if (state == 4)\r\n                chatBox.appendText(\"You've found the door!\\n\");\r\n            else if (state == 5)\r\n                chatBox.appendText(\"You've opened the door!\\n\");\r\n\r\n            //Reset state to 0\r\n            gameBoard.setState();\r\n        });\r\n\r\n        //Clears the command bar when clicked on\r\n        commandBar.setOnMouseClicked(MouseEvent ->\r\n        {\r\n            commandBar.clear();\r\n        });\r\n\r\n        //When an input is entered into the command bar, take action\r\n        commandBar.setOnKeyPressed(e -> {if(e.getCode().equals(KeyCode.ENTER))\r\n        {\r\n            String command = commandBar.getText();\r\n\r\n            //Commands\r\n            if (command.equals(\"!commands\"))\r\n            {\r\n                chatBox.appendText(\"\\nCommands:\\n\");\r\n                chatBox.appendText(\"!inventory\\n\");\r\n                chatBox.appendText(\"!pathMessages\\n\");\r\n                chatBox.appendText(\"!musicOn or !musicOff\\n\\n\");\r\n            }\r\n            else if (command.equals(\"!inventory\"))\r\n                chatBox.appendText(gameBoard.getPlayerInventory());\r\n            else if (command.equals(\"!pathMessages\"))\r\n            {\r\n                chatBox.appendText((messages) ? \"Tile messages off!\\n\" : \"Tile messages on!\\n\");\r\n                messages = !messages;\r\n            }\r\n            else if (command.equals(\"!musicOn\"))\r\n                gameBoard.onMusic();\r\n            else if (command.equals(\"!musicOff\"))\r\n                gameBoard.offMusic();\r\n\r\n            //Clear the command bar of the previous message\r\n            commandBar.clear();\r\n        }});\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Code/ProjectCode/src/main/java/DnDGame.java	(revision 1878a1b18ed0894b7e4cc4fa61c09950fb5edb1e)
++++ Code/ProjectCode/src/main/java/DnDGame.java	(date 1605039794665)
+@@ -12,12 +12,15 @@
+ import javafx.scene.media.Media;
+ import javafx.scene.media.MediaPlayer;
+ import javafx.scene.media.MediaView;
+-import javafx.scene.paint.Color;
+ import javafx.scene.text.Font;
+ import javafx.scene.text.FontWeight;
++import javafx.scene.text.Text;
++import javafx.scene.text.TextAlignment;
+ import javafx.stage.Stage;
+ import javafx.util.Duration;
+-
++import javax.swing.*;
++import java.awt.event.ActionEvent;
++import java.awt.event.ActionListener;
+ public class DnDGame extends Application
+ {
+     //Initialize all scenes
+@@ -44,11 +47,12 @@
+     private Button playNow = new Button("Play now!");
+     private Button aboutUs = new Button("About Us");
+     private Button exit = new Button("Exit");
+-    private Button back = new Button("Back");
++    private Button back = new Button();
+     private Button muteButton2 = new Button();
+ 
+     //Create StackPane and children nodes for the "about us" scene
+     private StackPane aboutUsPane;
++    private Text aboutUsText;
+ 
+     //Add music for opening scene, menu, and SFX for buttons
+     Media introMusic = new Media(getClass().getClassLoader().getResource("introMusic.mp3").toString());
+@@ -160,10 +164,6 @@
+         primaryStage.setScene(opening);
+         primaryStage.show();
+ 
+-        // BORRAT, PLEASE DELETE LATER
+-        BackgroundImage borratIMG = new BackgroundImage(new Image("borrat.jpg"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(0.80, 0.80, true, true, false, false));
+-        Background borratBG = new Background(borratIMG);
+-
+         //Display menu options
+         menuOptions.getChildren().addAll(playNow, aboutUs, exit);
+         menuOptions.setAlignment(Pos.CENTER);
+@@ -186,7 +186,6 @@
+         aboutUs.setFont(font);
+         exit.setFont(font);
+ 
+-        //muteButton.setPrefSize(200.0,100.0);
+ 
+         Image image = new Image("banner.png");
+         BackgroundImage backgroundImageOption = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
+@@ -196,12 +195,27 @@
+         exit.setBackground(gameBGOption);
+ 
+         aboutUsPane = new StackPane(back);
++        aboutUsText = new Text();
++        aboutUsText.setFont(Font.font("Times New Roman MS", FontWeight.EXTRA_BOLD,22));
++        aboutUsText.setTextAlignment(TextAlignment.LEFT);
++
++
++        aboutUsPane = new StackPane(aboutUsText, back);
++        StackPane.setAlignment(aboutUsText, Pos.TOP_LEFT);
+         StackPane.setAlignment(back, Pos.BOTTOM_CENTER);
+ 
+         scene = new Scene(menuPane, 1200, 700);
+         menuScene = new Scene(borderPane, 1200, 700);
+         aboutUsScene = new Scene(aboutUsPane, 1200, 700);
+-        aboutUsPane.setBackground(borratBG);
++        final String test = "About Us:\n" +
++                "\n" +
++                "We are Sam Alammar, Luke Austin, Alex Choi, and  Andrew Macatangay. We are a  group of game developers from \n" +
++                "Chicago, Illinois. Collectively, we are known as Bohn Jell Entertainment.\n" +
++                "\n" +
++                "Welcome... to the Dankest Dungeon.\n" +
++                "You are Trogdor, a dragon who thirsts for gold and blood. You must descend through the dungeons, surviving as \n" +
++                "many levels as you can, and collecting as much gold as you can until you are satisfied with your bounty... or die.\n\n" +
++                "Good Luck.";
+         introTrack.setVolume(0.05);
+         introTrack.setCycleCount(MediaPlayer.INDEFINITE);
+         introTrack.play();
+@@ -242,9 +256,30 @@
+                 gameBoard.onMusic();
+         });
+ 
++        //Create background for about us pane
++        BackgroundImage aboutUsImage = new BackgroundImage(new Image("aboutUsPic.jpg"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
++        Background aboutBG = new Background(aboutUsImage);
++        aboutUsText.setStyle("-fx-background-color: rgba(0,0,0,0.7); -fx-font-weight: bold");
++        aboutUsPane.setBackground(aboutBG);
++
++        //Create image for back button
++        back.setPrefSize(300,320);
++        BackgroundImage backImage = new BackgroundImage(new Image("backIMG.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
++        Background backBG = new Background(backImage);
++        back.setBackground(backBG);
++
++
+         aboutUs.setOnAction(actionEvent ->
+         {
++
++            try
++            {
++                animateTeletype(test, aboutUsText);
++            }
++            catch (InterruptedException ignored){};
++
+             primaryStage.setScene(aboutUsScene);
++
+             primaryStage.show();
+         });
+ 
+@@ -349,6 +384,17 @@
+             }
+         });
+ 
++        menuExit.setOnAction(actionEvent ->
++        {
++            //Create scene and add BorderPane on top of it
++            primaryStage.setScene(scene);
++            primaryStage.show();
++            gameBoard.offMusic();
++
++            if (flip[0])
++                menuTrack.play();
++        });
++
+         //If the GridPane is clicked on, then output to the chat window if applicable
+         gameBoard.setOnMouseClicked(MouseEvent ->
+         {
+@@ -380,8 +426,8 @@
+         //When an input is entered into the command bar, take action
+         commandBar.setOnKeyPressed(e -> {if(e.getCode().equals(KeyCode.ENTER))
+         {
++
+             String command = commandBar.getText();
+-
+             //Commands
+             if (command.equals("!commands"))
+             {
+@@ -397,13 +443,46 @@
+                 chatBox.appendText((messages) ? "Tile messages off!\n" : "Tile messages on!\n");
+                 messages = !messages;
+             }
+-            else if (command.equals("!musicOn"))
++            else if (command.equals("!musicOn")) {
+                 gameBoard.onMusic();
++                flip[0] = true;
++                muteButton1.setBackground(volumeBG);
++                muteButton2.setBackground(volumeBG);
++            }
+             else if (command.equals("!musicOff"))
++            {
+                 gameBoard.offMusic();
++                flip[0] = false;
++                muteButton1.setBackground(muteBG);
++                muteButton2.setBackground(muteBG);
++            }
+ 
+             //Clear the command bar of the previous message
+             commandBar.clear();
+         }});
+     }
++    static Timer timer = null;
++    public static void animateTeletype(final String input, final Text text) throws InterruptedException
++    {
++        final String[] s = new String[1];
++        s[0] = " ";
++        final int[] i = new int[1];
++        i[0] = 0;
++        text.setText("");
++        StringBuilder txt = new StringBuilder("");
++        timer = new Timer(30, new ActionListener()
++        {
++            @Override
++            public void actionPerformed(ActionEvent e)
++            {
++                s[0] = input.substring(i[0], i[0]+1);
++                i[0]++;
++                txt.append(s[0]);
++                text.setText(txt.toString());
++                if(text.getText().equals(input))
++                    timer.stop();
++            }
++        });
++        timer.start();
++    }
+ }
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"ALL\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"b2edb6c7-d6d8-4f1f-ad95-bc368d98dfcf\" name=\"Default Changelist\" comment=\"\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Code/ProjectCode/src/main/java/DnDGame.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Code/ProjectCode/src/main/java/DnDGame.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Code/ProjectCode/target/classes/Dense_Tule_fog_in_Bakersfield,_California.jpg\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$1.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$1.class\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$2.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$2.class\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$3.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$3.class\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$4.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$4.class\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$5.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$5.class\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$6.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$6.class\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame.class\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Code/ProjectCode/target/classes/fog-smoke-isolated-transparent-background_238578-3.jpg\" beforeDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/Code/ProjectCode/target/classes/fogTile.png\" beforeDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"CodeStyleSettingsInfer\">\r\n    <option name=\"done\" value=\"true\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"MavenImportPreferences\">\r\n    <option name=\"generalSettings\">\r\n      <MavenGeneralSettings>\r\n        <option name=\"mavenHome\" value=\"D:\\IntelliJ\\IntelliJ IDEA Community Edition 2020.2.2\\plugins\\maven\\lib\\maven3\" />\r\n      </MavenGeneralSettings>\r\n    </option>\r\n    <option name=\"importingSettings\">\r\n      <MavenImportingSettings>\r\n        <option name=\"vmOptionsForImporter\" value=\"-Xmx768m\" />\r\n      </MavenImportingSettings>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectCodeStyleSettingsMigration\">\r\n    <option name=\"version\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"1i3iw8pnXOsDi1nsa7Gf53IcYlT\" />\r\n  <component name=\"ProjectLevelVcsManager\">\r\n    <ConfirmationsSetting value=\"1\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">\r\n    <property name=\"RunOnceActivity.ShowReadmeOnStart\" value=\"true\" />\r\n    <property name=\"last_opened_file_path\" value=\"$PROJECT_DIR$\" />\r\n    <property name=\"project.structure.last.edited\" value=\"Project\" />\r\n    <property name=\"project.structure.proportion\" value=\"0.15\" />\r\n    <property name=\"project.structure.side.proportion\" value=\"0.2\" />\r\n    <property name=\"restartRequiresConfirmation\" value=\"false\" />\r\n    <property name=\"settings.editor.selected.configurable\" value=\"reference.settings.project.maven.importing\" />\r\n  </component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\Andrew\\Desktop\\Group-16-Fall-2020\\Code\\ProjectCode\\src\\main\\resources\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Application.DnDGame\">\r\n    <configuration name=\"DnD\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"DnD\" />\r\n      <module name=\"DnD\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"DnDGame\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"DnDGame\" />\r\n      <module name=\"DnD\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.DnDGame\" />\r\n        <item itemvalue=\"Application.DnD\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"SvnConfiguration\">\r\n    <configuration />\r\n  </component>\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"b2edb6c7-d6d8-4f1f-ad95-bc368d98dfcf\" name=\"Default Changelist\" comment=\"\" />\r\n      <created>1601142911587</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1601142911587</updated>\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"WindowStateProjectService\">\r\n    <state x=\"361\" y=\"71\" key=\"#Project_Structure\" timestamp=\"1601145317918\">\r\n      <screen x=\"0\" y=\"0\" width=\"1536\" height=\"824\" />\r\n    </state>\r\n    <state x=\"361\" y=\"71\" key=\"#Project_Structure/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824\" timestamp=\"1601145317918\" />\r\n    <state x=\"223\" y=\"67\" width=\"1089\" height=\"704\" key=\"#com.intellij.execution.impl.EditConfigurationsDialog\" timestamp=\"1601145356497\">\r\n      <screen x=\"0\" y=\"0\" width=\"1536\" height=\"824\" />\r\n    </state>\r\n    <state x=\"223\" y=\"67\" width=\"1089\" height=\"704\" key=\"#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824\" timestamp=\"1601145356497\" />\r\n    <state x=\"510\" y=\"215\" key=\"#com.intellij.fileTypes.FileTypeChooser\" timestamp=\"1604206416004\">\r\n      <screen x=\"0\" y=\"0\" width=\"1536\" height=\"824\" />\r\n    </state>\r\n    <state x=\"510\" y=\"215\" key=\"#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824/-1920.-251.1920.1040@0.0.1536.824\" timestamp=\"1604206416004\" />\r\n    <state x=\"718\" y=\"154\" key=\"#com.intellij.ide.util.MemberChooser\" timestamp=\"1601944877220\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"574\" y=\"122\" key=\"#com.intellij.ide.util.MemberChooser/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824\" timestamp=\"1601173849830\" />\r\n    <state x=\"718\" y=\"154\" key=\"#com.intellij.ide.util.MemberChooser/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1601944877220\" />\r\n    <state x=\"618\" y=\"301\" key=\"#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog\" timestamp=\"1601143892774\">\r\n      <screen x=\"0\" y=\"0\" width=\"1536\" height=\"824\" />\r\n    </state>\r\n    <state x=\"618\" y=\"301\" key=\"#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824\" timestamp=\"1601143892774\" />\r\n    <state x=\"499\" y=\"159\" key=\"#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog\" timestamp=\"1601441931480\">\r\n      <screen x=\"0\" y=\"0\" width=\"1536\" height=\"824\" />\r\n    </state>\r\n    <state x=\"499\" y=\"159\" key=\"#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824\" timestamp=\"1601441931480\" />\r\n    <state x=\"686\" y=\"211\" key=\"FileChooserDialogImpl\" timestamp=\"1602871632961\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state x=\"549\" y=\"167\" key=\"FileChooserDialogImpl/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824\" timestamp=\"1602126045624\" />\r\n    <state x=\"686\" y=\"211\" key=\"FileChooserDialogImpl/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1602871632961\" />\r\n    <state width=\"1877\" height=\"284\" key=\"GridCell.Tab.0.bottom\" timestamp=\"1604558218505\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state width=\"1492\" height=\"147\" key=\"GridCell.Tab.0.bottom/0.0.1536.824/-1920.-251.1920.1040@0.0.1536.824\" timestamp=\"1604552397534\" />\r\n    <state width=\"1492\" height=\"147\" key=\"GridCell.Tab.0.bottom/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824\" timestamp=\"1602819978837\" />\r\n    <state width=\"1877\" height=\"284\" key=\"GridCell.Tab.0.bottom/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1604558218505\" />\r\n    <state width=\"1877\" height=\"284\" key=\"GridCell.Tab.0.center\" timestamp=\"1604558218504\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state width=\"1492\" height=\"147\" key=\"GridCell.Tab.0.center/0.0.1536.824/-1920.-251.1920.1040@0.0.1536.824\" timestamp=\"1604552397534\" />\r\n    <state width=\"1492\" height=\"147\" key=\"GridCell.Tab.0.center/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824\" timestamp=\"1602819978836\" />\r\n    <state width=\"1877\" height=\"284\" key=\"GridCell.Tab.0.center/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1604558218504\" />\r\n    <state width=\"1877\" height=\"284\" key=\"GridCell.Tab.0.left\" timestamp=\"1604558218504\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state width=\"1492\" height=\"147\" key=\"GridCell.Tab.0.left/0.0.1536.824/-1920.-251.1920.1040@0.0.1536.824\" timestamp=\"1604552397534\" />\r\n    <state width=\"1492\" height=\"147\" key=\"GridCell.Tab.0.left/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824\" timestamp=\"1602819978836\" />\r\n    <state width=\"1877\" height=\"284\" key=\"GridCell.Tab.0.left/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1604558218504\" />\r\n    <state width=\"1877\" height=\"284\" key=\"GridCell.Tab.0.right\" timestamp=\"1604558218504\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state width=\"1492\" height=\"147\" key=\"GridCell.Tab.0.right/0.0.1536.824/-1920.-251.1920.1040@0.0.1536.824\" timestamp=\"1604552397534\" />\r\n    <state width=\"1492\" height=\"147\" key=\"GridCell.Tab.0.right/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824\" timestamp=\"1602819978837\" />\r\n    <state width=\"1877\" height=\"284\" key=\"GridCell.Tab.0.right/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1604558218504\" />\r\n    <state width=\"1877\" height=\"348\" key=\"GridCell.Tab.1.bottom\" timestamp=\"1604553557267\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state width=\"1492\" height=\"261\" key=\"GridCell.Tab.1.bottom/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824\" timestamp=\"1602218227537\" />\r\n    <state width=\"1877\" height=\"348\" key=\"GridCell.Tab.1.bottom/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1604553557267\" />\r\n    <state width=\"1877\" height=\"348\" key=\"GridCell.Tab.1.center\" timestamp=\"1604553557267\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state width=\"1492\" height=\"261\" key=\"GridCell.Tab.1.center/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824\" timestamp=\"1602218227537\" />\r\n    <state width=\"1877\" height=\"348\" key=\"GridCell.Tab.1.center/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1604553557267\" />\r\n    <state width=\"1877\" height=\"348\" key=\"GridCell.Tab.1.left\" timestamp=\"1604553557267\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state width=\"1492\" height=\"261\" key=\"GridCell.Tab.1.left/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824\" timestamp=\"1602218227537\" />\r\n    <state width=\"1877\" height=\"348\" key=\"GridCell.Tab.1.left/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1604553557267\" />\r\n    <state width=\"1877\" height=\"348\" key=\"GridCell.Tab.1.right\" timestamp=\"1604553557267\">\r\n      <screen x=\"0\" y=\"0\" width=\"1920\" height=\"1040\" />\r\n    </state>\r\n    <state width=\"1492\" height=\"261\" key=\"GridCell.Tab.1.right/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824\" timestamp=\"1602218227537\" />\r\n    <state width=\"1877\" height=\"348\" key=\"GridCell.Tab.1.right/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040\" timestamp=\"1604553557267\" />\r\n    <state x=\"498\" y=\"0\" key=\"SettingsEditor\" timestamp=\"1601145446254\">\r\n      <screen x=\"0\" y=\"0\" width=\"1536\" height=\"824\" />\r\n    </state>\r\n    <state x=\"498\" y=\"0\" key=\"SettingsEditor/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824\" timestamp=\"1601145446254\" />\r\n    <state x=\"209\" y=\"33\" key=\"new project wizard\" timestamp=\"1601143083194\">\r\n      <screen x=\"0\" y=\"0\" width=\"1536\" height=\"824\" />\r\n    </state>\r\n    <state x=\"209\" y=\"33\" key=\"new project wizard/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824\" timestamp=\"1601143083194\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/workspace.xml	(revision 1878a1b18ed0894b7e4cc4fa61c09950fb5edb1e)
++++ .idea/workspace.xml	(date 1604636435252)
+@@ -4,10 +4,9 @@
+     <option name="autoReloadType" value="ALL" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="b2edb6c7-d6d8-4f1f-ad95-bc368d98dfcf" name="Default Changelist" comment="">
++    <list default="true" id="b2edb6c7-d6d8-4f1f-ad95-bc368d98dfcf" name="Default Changelist" comment="So much more GUI/Pains/stuff">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/Code/ProjectCode/src/main/java/DnDGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ProjectCode/src/main/java/DnDGame.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Code/ProjectCode/target/classes/Dense_Tule_fog_in_Bakersfield,_California.jpg" beforeDir="false" />
+       <change beforePath="$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$1.class" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$2.class" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$3.class" afterDir="false" />
+@@ -15,8 +14,6 @@
+       <change beforePath="$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$5.class" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame$6.class" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame.class" beforeDir="false" afterPath="$PROJECT_DIR$/Code/ProjectCode/target/classes/DnDGame.class" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Code/ProjectCode/target/classes/fog-smoke-isolated-transparent-background_238578-3.jpg" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/Code/ProjectCode/target/classes/fogTile.png" beforeDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -107,8 +104,20 @@
+       <option name="presentableId" value="Default" />
+       <updated>1601142911587</updated>
+     </task>
++    <task id="LOCAL-00001" summary="Added more GUI and Buttons effects">
++      <created>1604559681286</created>
++      <option name="number" value="00001" />
++      <option name="presentableId" value="LOCAL-00001" />
++      <option name="project" value="LOCAL" />
++      <updated>1604559681286</updated>
++    </task>
++    <option name="localTasksCounter" value="2" />
+     <servers />
+   </component>
++  <component name="VcsManagerConfiguration">
++    <MESSAGE value="Added more GUI and Buttons effects" />
++    <option name="LAST_COMMIT_MESSAGE" value="Added more GUI and Buttons effects" />
++  </component>
+   <component name="WindowStateProjectService">
+     <state x="361" y="71" key="#Project_Structure" timestamp="1601145317918">
+       <screen x="0" y="0" width="1536" height="824" />
+@@ -135,59 +144,67 @@
+       <screen x="0" y="0" width="1536" height="824" />
+     </state>
+     <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1601441931480" />
++    <state x="488" y="88" key="CommitChangelistDialog2" timestamp="1604635957981">
++      <screen x="0" y="0" width="1920" height="1040" />
++    </state>
++    <state x="488" y="88" key="CommitChangelistDialog2/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604635957981" />
+     <state x="686" y="211" key="FileChooserDialogImpl" timestamp="1602871632961">
+       <screen x="0" y="0" width="1920" height="1040" />
+     </state>
+     <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1602126045624" />
+     <state x="686" y="211" key="FileChooserDialogImpl/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1602871632961" />
+-    <state width="1877" height="284" key="GridCell.Tab.0.bottom" timestamp="1604558218505">
++    <state width="1877" height="348" key="GridCell.Tab.0.bottom" timestamp="1604636435177">
+       <screen x="0" y="0" width="1920" height="1040" />
+     </state>
+     <state width="1492" height="147" key="GridCell.Tab.0.bottom/0.0.1536.824/-1920.-251.1920.1040@0.0.1536.824" timestamp="1604552397534" />
+     <state width="1492" height="147" key="GridCell.Tab.0.bottom/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1602819978837" />
+-    <state width="1877" height="284" key="GridCell.Tab.0.bottom/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604558218505" />
+-    <state width="1877" height="284" key="GridCell.Tab.0.center" timestamp="1604558218504">
++    <state width="1877" height="348" key="GridCell.Tab.0.bottom/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604636435177" />
++    <state width="1877" height="348" key="GridCell.Tab.0.center" timestamp="1604636435177">
+       <screen x="0" y="0" width="1920" height="1040" />
+     </state>
+     <state width="1492" height="147" key="GridCell.Tab.0.center/0.0.1536.824/-1920.-251.1920.1040@0.0.1536.824" timestamp="1604552397534" />
+     <state width="1492" height="147" key="GridCell.Tab.0.center/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1602819978836" />
+-    <state width="1877" height="284" key="GridCell.Tab.0.center/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604558218504" />
+-    <state width="1877" height="284" key="GridCell.Tab.0.left" timestamp="1604558218504">
++    <state width="1877" height="348" key="GridCell.Tab.0.center/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604636435177" />
++    <state width="1877" height="348" key="GridCell.Tab.0.left" timestamp="1604636435177">
+       <screen x="0" y="0" width="1920" height="1040" />
+     </state>
+     <state width="1492" height="147" key="GridCell.Tab.0.left/0.0.1536.824/-1920.-251.1920.1040@0.0.1536.824" timestamp="1604552397534" />
+     <state width="1492" height="147" key="GridCell.Tab.0.left/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1602819978836" />
+-    <state width="1877" height="284" key="GridCell.Tab.0.left/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604558218504" />
+-    <state width="1877" height="284" key="GridCell.Tab.0.right" timestamp="1604558218504">
++    <state width="1877" height="348" key="GridCell.Tab.0.left/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604636435177" />
++    <state width="1877" height="348" key="GridCell.Tab.0.right" timestamp="1604636435177">
+       <screen x="0" y="0" width="1920" height="1040" />
+     </state>
+     <state width="1492" height="147" key="GridCell.Tab.0.right/0.0.1536.824/-1920.-251.1920.1040@0.0.1536.824" timestamp="1604552397534" />
+     <state width="1492" height="147" key="GridCell.Tab.0.right/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1602819978837" />
+-    <state width="1877" height="284" key="GridCell.Tab.0.right/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604558218504" />
+-    <state width="1877" height="348" key="GridCell.Tab.1.bottom" timestamp="1604553557267">
++    <state width="1877" height="348" key="GridCell.Tab.0.right/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604636435177" />
++    <state width="1877" height="348" key="GridCell.Tab.1.bottom" timestamp="1604636435177">
+       <screen x="0" y="0" width="1920" height="1040" />
+     </state>
+     <state width="1492" height="261" key="GridCell.Tab.1.bottom/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1602218227537" />
+-    <state width="1877" height="348" key="GridCell.Tab.1.bottom/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604553557267" />
+-    <state width="1877" height="348" key="GridCell.Tab.1.center" timestamp="1604553557267">
++    <state width="1877" height="348" key="GridCell.Tab.1.bottom/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604636435177" />
++    <state width="1877" height="348" key="GridCell.Tab.1.center" timestamp="1604636435177">
+       <screen x="0" y="0" width="1920" height="1040" />
+     </state>
+     <state width="1492" height="261" key="GridCell.Tab.1.center/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1602218227537" />
+-    <state width="1877" height="348" key="GridCell.Tab.1.center/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604553557267" />
+-    <state width="1877" height="348" key="GridCell.Tab.1.left" timestamp="1604553557267">
++    <state width="1877" height="348" key="GridCell.Tab.1.center/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604636435177" />
++    <state width="1877" height="348" key="GridCell.Tab.1.left" timestamp="1604636435177">
+       <screen x="0" y="0" width="1920" height="1040" />
+     </state>
+     <state width="1492" height="261" key="GridCell.Tab.1.left/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1602218227537" />
+-    <state width="1877" height="348" key="GridCell.Tab.1.left/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604553557267" />
+-    <state width="1877" height="348" key="GridCell.Tab.1.right" timestamp="1604553557267">
++    <state width="1877" height="348" key="GridCell.Tab.1.left/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604636435177" />
++    <state width="1877" height="348" key="GridCell.Tab.1.right" timestamp="1604636435177">
+       <screen x="0" y="0" width="1920" height="1040" />
+     </state>
+     <state width="1492" height="261" key="GridCell.Tab.1.right/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1602218227537" />
+-    <state width="1877" height="348" key="GridCell.Tab.1.right/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604553557267" />
++    <state width="1877" height="348" key="GridCell.Tab.1.right/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604636435177" />
+     <state x="498" y="0" key="SettingsEditor" timestamp="1601145446254">
+       <screen x="0" y="0" width="1536" height="824" />
+     </state>
+     <state x="498" y="0" key="SettingsEditor/0.0.1536.824/-1920.60.1920.1040@0.0.1536.824" timestamp="1601145446254" />
++    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1604559684522">
++      <screen x="0" y="0" width="1920" height="1040" />
++    </state>
++    <state x="552" y="252" key="Vcs.Push.Dialog.v2/1920.202.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1604559684522" />
+     <state x="209" y="33" key="new project wizard" timestamp="1601143083194">
+       <screen x="0" y="0" width="1536" height="824" />
+     </state>

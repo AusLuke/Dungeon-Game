@@ -470,14 +470,14 @@ public class DnDGame extends Application
                 level3.getGameBoard().setAlignment(Pos.CENTER);
                 pane.getChildren().removeAll(level2.getGameBoard());
                 pane.getChildren().addAll(level3.getGameBoard());
-                Image background3 = new Image("backIMG.png");
+                Image background3 = new Image("level3Background.jpg");
                 BackgroundImage backgroundImage3 = new BackgroundImage(background3, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, new BackgroundSize(1.0, 1.0, true, true, false, false));
                 Background gameBG3 = new Background(backgroundImage3);
                 borderPane.setBackground(gameBG3);
                 currentLevel = 3;
                 level2.offMusic();
                 if (flip[0])
-                    level2.onMusic();
+                    level3.onMusic();
             }
 
             //Reset state to 0

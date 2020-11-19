@@ -6,8 +6,8 @@ import javafx.scene.media.MediaPlayer;
 
 public class Level3 extends GridPane
 {
-    Media levelTwoMusic = new Media(getClass().getClassLoader().getResource("Determination OST.mp3").toString());
-    MediaPlayer track = new MediaPlayer(levelTwoMusic);
+    Media levelThreeMusic = new Media(getClass().getClassLoader().getResource("His Theme.mp3").toString());
+    MediaPlayer track = new MediaPlayer(levelThreeMusic);
     Player player = new Player();
     private int state;
 
