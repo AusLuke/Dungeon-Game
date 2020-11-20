@@ -86,6 +86,11 @@ public class Level2 extends GridPane
         {
             state = ((Door)source).setImage();
 
+            if(!((Door)source).getVisited()){
+                ((Door)source).setVisited();
+                return;
+            }
+
             //If the player has a key, open the door, and update the player's key status
             if (player.checkKey())
             {

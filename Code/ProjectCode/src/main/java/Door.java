@@ -2,7 +2,6 @@ import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.paint.Paint;
 
 public class Door extends Tile
 {
@@ -20,7 +19,6 @@ public class Door extends Tile
         this.setFill(imagePattern2);
     }
 
-
     Door(int value)
     {
         this.setWidth(100);
@@ -32,14 +30,16 @@ public class Door extends Tile
     public int setImage()
     {
         this.setFill(imagePattern);
-        if (!visited)
-        {
-            visited = !visited;
-            return 0;
-        }
         track.setVolume(0.75);
         track.play();
         return 4;
     }
 
+    boolean getVisited(){
+        return visited;
+    }
+
+    void setVisited(){
+        visited = true;
+    }
 }

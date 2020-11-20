@@ -429,6 +429,9 @@ public class DnDGame extends Application
             else if (state == 5)
             {
                 chatBox.appendText("You've opened the door!\n");
+                chatBox.clear();
+
+                chatBox.appendText("Welcome to level 2!\n");
 
                 level2.getGameBoard().setAlignment(Pos.CENTER);
                 pane.getChildren().removeAll(level1.getGameBoard());
@@ -466,7 +469,10 @@ public class DnDGame extends Application
             else if (state == 5)
             {
                 chatBox.appendText("You've opened the door!\n");
+
                 level3 = new Level3();
+                chatBox.clear();
+                chatBox.appendText("Welcome to level 3!\n");
                 level3.getGameBoard().setAlignment(Pos.CENTER);
                 pane.getChildren().removeAll(level2.getGameBoard());
                 pane.getChildren().addAll(level3.getGameBoard());
