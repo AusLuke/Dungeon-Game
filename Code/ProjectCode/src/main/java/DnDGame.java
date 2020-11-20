@@ -166,7 +166,7 @@ public class DnDGame extends Application
         openingPane = new StackPane(mediaView, playButton, muteButton1);
         StackPane.setAlignment(playButton, Pos.BOTTOM_CENTER);
         StackPane.setAlignment(muteButton1, Pos.BOTTOM_RIGHT);
-        opening = new Scene(openingPane, 1600 ,700);
+        opening = new Scene(openingPane, 1900 ,900);
         primaryStage.setScene(opening);
         primaryStage.show();
 
@@ -210,9 +210,9 @@ public class DnDGame extends Application
         StackPane.setAlignment(aboutUsText, Pos.TOP_LEFT);
         StackPane.setAlignment(back, Pos.BOTTOM_CENTER);
 
-        scene = new Scene(menuPane, 1600, 700);
-        menuScene = new Scene(borderPane, 1600, 700);
-        aboutUsScene = new Scene(aboutUsPane, 1600, 700);
+        scene = new Scene(menuPane, 1900, 900);
+        menuScene = new Scene(borderPane, 1900, 900);
+        aboutUsScene = new Scene(aboutUsPane, 1900, 900);
         final String test = "About Us:\n" +
                 "\n" +
                 "We are Sam Alammar, Luke Austin, Alex Choi, and  Andrew Macatangay. We are a  group of game developers from \n" +
@@ -222,11 +222,11 @@ public class DnDGame extends Application
                 "You are Trogdor, a dragon who thirsts for gold and blood. You must descend through the dungeons, surviving as \n" +
                 "many levels as you can, and collecting as much gold as you can until you are satisfied with your bounty... or die.\n\n" +
                 "Good Luck.";
-        introTrack.setVolume(0.05);
+        introTrack.setVolume(0.50);
         introTrack.setCycleCount(MediaPlayer.INDEFINITE);
         introTrack.play();
 
-        menuTrack.setVolume(0.05);
+        menuTrack.setVolume(0.50);
         menuTrack.setCycleCount(MediaPlayer.INDEFINITE);
 
 
@@ -234,7 +234,7 @@ public class DnDGame extends Application
         playButton.setOnAction(actionEvent ->
         {
             // Confirm SFX
-            trackConfirm.setVolume(0.05);
+            trackConfirm.setVolume(0.50);
             trackConfirm.seek(Duration.ZERO);
             trackConfirm.play();
 

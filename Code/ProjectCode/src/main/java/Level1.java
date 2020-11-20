@@ -13,7 +13,7 @@ public class Level1 extends GridPane
 
     Level1()
     {
-        track1.setVolume(0.05);
+        track1.setVolume(0.2);
         track1.setCycleCount(MediaPlayer.INDEFINITE);
 
         this.setHgap(1);
